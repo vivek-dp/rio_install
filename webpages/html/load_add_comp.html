@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="../js/load_add_comp.js"></script>
+</head>
+<body>
+	<div class="ui equal width form right-pad">
+		<!-- <div class="ui form" style="text-align: center;">
+			<div class="ui buttons">
+			  <button class="ui button comp1" id="clkaddcomp" style="width: 215px;">Components</button>
+			  <div class="or"></div>
+			  <button class="ui orange button comp2" id="clkcustcomp" style="width: 215px;">Carcass Components</button>
+			</div>
+		</div> -->
+		<div style="margin-top: 1em;">&nbsp;</div>
+
+		<!-- <div id="show_listcomp" style="display: none;">
+			<div class="column">
+				<div id="load_maincategory"></div>
+				<div style="margin-top: .5em;">&nbsp;</div>
+				<div id="load_subcategory"></div>
+				<div style="margin-top: .5em;">&nbsp;</div>
+				<div id="load_sketchup"></div>
+			</div>
+		</div> -->
+
+		<div id="show_custcomp" style="display: none;">
+			<div class="column">
+				<div id="load_space"></div>
+				<div style="margin-top: .1em;">&nbsp;</div>
+				<div id="load_subcat"></div>
+				<div style="margin-top: .1em;">&nbsp;</div>
+				<div id="load_carcass"></div>
+				<div style="margin-top: .1em;">&nbsp;</div>
+				<div id="newupdate"></div>
+
+				<div style="margin-top: 1em;">&nbsp;</div>
+				<div class="sixteen wide column">
+					<div style="text-align: center;">
+						<div class="ui disabled animated fade positive button" id="expcomp">
+							<div class="visible content" style="font-family: 'Poppins', sans-serif; font-weight: normal;">Create Component</div>
+							<div class="hidden content"><i class="plus icon"></i></div>
+						</div>
+						<!-- <button class="ui disabled positive button" id="expcomp">Export Component</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$('.ui.dropdown').dropdown();
+	</script>
+</body>
+</html>

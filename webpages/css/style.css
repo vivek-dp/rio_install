@@ -1,0 +1,165 @@
+body {
+	background: #1b1b1b;
+	color: #ccc;
+}
+
+.ui.vertical.tabular.menu {
+	border-right: 1px solid #585858;
+}
+
+.ui.vertical.tabular.menu .active.item{
+	background: #2e2e2e;
+	color: orangered;
+	border-color: gray;
+	font-family: 'Poppins', sans-serif;
+}
+.ui.form .field>label {
+	color: gray;
+}
+.head-logo {
+	border-bottom: 1px solid #585858;
+	padding-bottom: .21428571rem;
+	margin-top: -.14285714em;
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.28571429em;
+	padding: 5px 0px 5px 0px;
+	letter-spacing: .5px;
+}
+.ui.input {
+	background: transparent;
+}
+h3 {
+	color: firebrick;
+}
+.ui.input>input {
+  width: 100%;
+  padding: 10px 5px !important;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none !important;
+  border-radius: 0px !important;
+  border-bottom: 1px solid gray !important;
+  background: transparent !important;
+  color: white !important;
+}
+
+select {
+  width: 100%;
+  padding: 10px 5px !important;
+  box-sizing: border-box;
+  border: none !important;
+  border-radius: 0px !important;
+  border-bottom: 1px solid gray !important;
+  background: transparent !important;
+  color: white !important;
+}
+
+option {
+	color: gray !important;
+	padding: 10px 0px 10px 0px;
+	height: 20px;
+}
+
+.ui.label {
+	width: 32%;
+  background-color: dimgray;
+  padding: .5833em .833em;
+  color: lightgray;
+  font-weight: 700;
+  -webkit-transition: background .1s ease;
+}
+.ui.checkbox label {
+	color: white !important;
+}
+
+.ui.dividing.header {
+	border-bottom: 1px solid #424949;
+	color: darkcyan;
+}
+
+.ui.vertical.tabular.menu .item {
+	color: #ccc;
+	font-family: 'Poppins', sans-serif;
+	font-size: small;
+}
+
+.right-pad {
+	margin-right: 15px;
+}
+
+.ui.buttons .button:first-child {
+  border-left: none;
+  margin-left: 0;
+  border-top-left-radius: 1.285714rem;
+  border-bottom-left-radius: 1.285714rem;
+}
+
+.ui.buttons .button:last-child {
+  border-top-right-radius: 1.285714rem;
+  border-bottom-right-radius: 1.285714rem;
+}
+
+.ui.inverted.dimmer .ui.loader, .ui.loader {
+	font-size: 13px !important;
+}
+
+.ui.segment {
+	border: 2px solid dimgrey;
+}
+
+.log-head {
+	font-size: large;
+  font-weight: bold;
+  color: darkcyan;
+  letter-spacing: .5px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.net-text {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 36px;
+	font-family: 'Poppins', sans-serif;
+}
+
+.mandatory {
+	color: red;
+}
+
+.pro-detail {
+	float: right;
+	font-size: 14px;
+	font-weight: normal;
+	margin-top: -10px;
+	margin-right: 5px;
+	text-transform: capitalize;
+}
+
+.pro-detail div {
+	line-height: 30px;
+	color: white;
+}
+
+#menus .disabled {
+	color: #2e2e2e !important;
+}
+
+.inp-ltr {
+	text-transform: capitalize;
+}
+
+.ui.tabular.menu .item {
+	padding: 13px 5px;
+}
+
+.info-icon {
+	cursor: pointer;
+}
+
+.net-note {
+	font-weight: normal;
+	font-size: small;
+	color: red;
+	display: none;
+}

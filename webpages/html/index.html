@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+	<script type="text/javascript" src="../js/semantic.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+	<script type="text/javascript" src="../js/toastr.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/toastr.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+	<script type="text/javascript" src="../js/index.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+
+<body>
+	<div class="ui container-fluid">
+		<div class="ui active dimmer" id="load" style="display: none;">
+	    <div class="ui text loader" style="font-size: 13px !important;">Please wait...</div>
+	  </div>
+
+	  <div class="ui grid">
+	  	<div class="four wide column" style="padding-right: 0em; margin-top: 4em;">
+	  		<div id="menus" class="ui vertical fluid tabular menu" style="height: 50%;">
+	  			<a href="#" class="item active fbutton" id="add_pro_detail" onclick="pager(0)">Project Details<i class="angle double right icon" style="display: none;" id="p0"></i></a>
+	  			<a href="#" class="item fbutton" id="add_wall" onclick="pager(1)">Create Wall<i class="angle double right icon" style="display: none;" id="p1"></i></a>
+	  			<a href="#" class="item fbutton" id="add_comp" onclick="pager(2)">Components<i class="angle double right icon" style="display: none;" id="p2"></i></a>
+	  			<a href="#" class="item fbutton" id="add_attr" onclick="pager(3)">Attributes<i class="angle double right icon" style="display: none;" id="p3"></i></a>
+	  			<a href="#" class="item fbutton" id="exp_work_draw" onclick="pager(4)">Working Drawing<i class="angle double right icon" style="display: none;" id="p4"></i></a>
+	  		</div>
+	  	</div>
+
+	  	<div class="twelve wide column" style="background: #2e2e2e;">
+	  		<h1 class="head-logo">
+	  			<span style="font-family: 'Poppins', sans-serif;">R<span style="font-size: 22px;">io</span>STD<span style="color: darkcyan; font-size: 18px;"> v1.0</span></b></span>
+	  			<div class="pro-detail">
+	  				<div><span style="color: darkturquoise;">Client Name:</span> <span id="cliname"></span></div>
+	  				<div><span style="color: darkturquoise;">Project Name:</span> <span id="proname"></span></div>
+	  			</div>
+	  		</h1>
+	  		<div id="page_content"></div>
+	  	</div>
+	  </div>
+	</div>
+</body>
+</html>

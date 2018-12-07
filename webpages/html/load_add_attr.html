@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="../js/load_add_attr.js"></script>
+</head>
+
+<body>
+	<div class="ui equal width form right-pad">
+		<div class="column">
+			<div class="ui form">
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Raw Material:</div>
+						<div class="ui input"><input type="text" id="attr_raw_material"></div>
+					</div>					
+				</div>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Handles:</div>
+						<div class="ui input"><input type="text" id="attr_handles_type"></div>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Soft Close:</div>
+						<select class="ui dropdown" id="attr_soft_close">
+							<option value="0">Select...</option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>	
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Finish Type:</div>
+						<select class="ui dropdown" id="attr_finish_type">
+							<option value="0">Select...</option>
+							<option value="acrylic">Acrylic</option>
+							<option value="duco">Duco</option>
+							<option value="veneer">Veneer</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Product Code:</div>
+						<div class="ui disabled input" onclick="readOly()"><input type="text" id="attr_product_code"></div>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">Product Name:</div>
+						<div class="ui disabled input" onclick="readOly()"><input type="text" id="attr_product_name"></div>
+					</div>
+				</div>
+
+				<h4 class="ui dividing header" style="font-family: 'Poppins', sans-serif;">Lamination Codes</h4>
+				<div class="field" id="show_leftlam" style="display: none;">
+					<div class="ui labeled input">
+						<div class="ui label">Left:</div>
+						<div class="ui input"><input type="text" id="attr_left_lamination"></div>
+					</div>
+				</div>
+				<div class="field" id="show_rightlam" style="display: none;">
+					<div class="ui labeled input">
+						<div class="ui label">Right:</div>
+						<div class="ui input"><input type="text" id="attr_right_lamination"></div>
+					</div>
+				</div>
+				<div class="field" id="show_toplam" style="display: none;">
+					<div class="ui labeled input">
+						<div class="ui label">Top:</div>
+						<div class="ui input"><input type="text" id="attr_top_lamination"></div>
+					</div>
+				</div>
+
+				<div class="field" style="text-align: center;">
+					<button class="ui positive button" onclick="uptvalue()" style="font-family: 'Poppins', sans-serif; font-weight: normal;">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$('.ui.dropdown').dropdown();
+	</script>
+</body>
+</html>
