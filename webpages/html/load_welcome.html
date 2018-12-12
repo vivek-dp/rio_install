@@ -11,7 +11,7 @@
 				<div class="ui form">
 					<div class="field">
 						<label>Client Name: <span class="mandatory">*</span></label>
-						<div class="ui input"><input type="text" id="client_name" onblur="enableskip()" autofocus="true" class="inp-ltr"></div>
+						<div class="ui input"><input type="text" id="client_name" onblur="enableskip()" class="inp-ltr" autofocus=""></div>
 					</div>
 					<div class="field">
 						<label>Apartment Name:</label>
@@ -19,7 +19,7 @@
 					</div>
 					<div class="field">
 						<label>Project Name: <span class="mandatory">*</span></label>
-						<div class="ui input"><input type="text" id="project_name" onblur="enableskip()" class="inp-ltr"></div>
+						<div class="ui input"><input type="text" id="project_name" onkeyup="enableskip()" class="inp-ltr"></div>
 					</div>
 					<div class="field">
 						<label>Designer Name:</label>
@@ -27,10 +27,10 @@
 					</div>
 				</div>
 
-				<div style="margin-top: 3em;">&nbsp;</div>
+				<!-- <div style="margin-top: 3em;">&nbsp;</div>
 				<div class="field">
 					<div style="color: red;"><u><b>NOTE:</b></u> Please fill all mandatory fields. (*)</div>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="column">
@@ -53,13 +53,19 @@
 					</div>
 				</div>
 				<div style="margin-top: 3em;">&nbsp;</div>
-				<div class="field" style="text-align: right;">
+				<!-- <div class="field" style="text-align: right;">
 					<div class="ui disabled animated fade positive button" id="startproject" style="font-family: 'Poppins', sans-serif; font-weight: normal;">
 						<div class="visible content">Start Project</div>
 						<div class="hidden content"><i class="angle double right icon"></i></i></div>
 					</div>
-					<!-- <button class="ui disabled positive button" id="startproject">Start Project <i class="angle double right icon"></i></button> -->
-				</div>
+				</div> -->
+			</div>
+		</div>
+		<div>
+			<span style="color: red;"><u><b>NOTE:</b></u> Please fill all mandatory fields. (*)</span>
+			<div class="ui right floated animated fade positive button" id="startproject" style="font-family: 'Poppins', sans-serif; font-weight: normal;">
+				<div class="visible content">Start Project</div>
+				<div class="hidden content"><i class="angle double right icon"></i></i></div>
 			</div>
 		</div>
 	</div>

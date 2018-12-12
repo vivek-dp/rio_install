@@ -49,7 +49,8 @@ function uptvalue(){
 	json = {}
 	for (var l = 0; l < ids.length; l++){
 		var vals = document.getElementById(ids[l]).value;
-		var res = ids[l].replace(/_/g, " ");
+		var res1 = ids[l].replace(/attr_/g, "");
+		var res = res1.replace(/_/g, " ");
 		var mname = res.capitalize();
 		if (ids[l] == "attr_soft_close" || ids[l] == "attr_finish_type"){
 			if (vals == 0){
@@ -60,7 +61,15 @@ function uptvalue(){
 			}
 		}else{
 			if (vals == ""){
-				toastr.error(mname+" can't be blank!", "Error")
+				var fval = '';
+				if (mname.includes("Left") == true){
+					fval = 'Right'
+				}else if (mname.includes("Right") == true){
+					fval = 'Left'
+				}else{
+					fval = mname
+				}
+				toastr.error(fval+" can't be blank!", "Error")
 				document.getElementById(ids[l]).focus();
 				return false;
 			}else{

@@ -31,7 +31,7 @@
 			    <div class="ui raised segment" style="background: #333 !important;">
 			      <div class="ui red ribbon label" style="height: 35px; font-size: 15px !important;"><i class="user outline icon"></i>Login</div>
 			      <span class="log-head">Welcome to RioSTD</span>
-			      <div class="ui form"><br>
+			      <form class="ui form"><br>
 			      	<div class="field">
 			      		<div class="ui left icon input">
 			      			<input type="email" id="email" placeholder="Email..." onblur="chkemail()" autofocus="true" value="test_user1@decorpot.com">
@@ -52,14 +52,11 @@
 			      			<div id="showon" class="net-text" style="color: green; display: none;"><div class="ui green empty circular label"></div>&nbsp;&nbsp;Online</div>
 			      		</div>
 			      		<div class="column" style="text-align: right;">
-			      			<div class="ui inverted animated red button">
-			      				<div class="visible content">Login</div>
-			      				<div class="hidden content" id="clicklogin"><i class="right arrow icon"></i></div>
-			      			</div>
+			      			<button class="ui inverted red button" type="submit" id="clicklogin">Login</button>
 			      		</div>
 			      	</div>
 			      	<div class="net-note" id="showoffnote"><b><u>NOTE:</u></b> Connect to the Internet, reopen RioSTD.</div>
-			      </div>
+			      </form>
 			    </div>
 			  </div>
 			</div>

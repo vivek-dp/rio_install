@@ -25,7 +25,7 @@ $(document).ready(function(){
 			arrval.push(email)
 			arrval.push(pwd)
 			$('#load').css("display", "block");
-			setTimeout(function() {window.location = 'skp:loginval@'+ arrval;}, 1000);			
+			setTimeout(function() {window.location = 'skp:loginval@'+ arrval;}, 10);			
 		}
 	});
 

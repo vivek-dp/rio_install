@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	document.getElementById('startproject').classList.add("disabled");
 	window.location = 'skp:get_detail@'+1;
 	window.location = 'skp:uptdetail@'+1;
 
