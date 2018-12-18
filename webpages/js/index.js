@@ -24,8 +24,8 @@ $(document).ready(function(){
 		if (email.length != 0 && pwd.length != 0){
 			arrval.push(email)
 			arrval.push(pwd)
-			$('#load').css("display", "block");
-			setTimeout(function() {window.location = 'skp:loginval@'+ arrval;}, 10);			
+			document.getElementById('loadicon').style.display = "block";
+			setTimeout(function() {window.location = 'skp:loginval@'+ arrval;}, 500);	
 		}
 	});
 

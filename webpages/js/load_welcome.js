@@ -23,14 +23,13 @@ $(document).ready(function(){
 		}
 		var str = JSON.stringify(json);
 		$('#load').css("display", "block")
-		setTimeout(function() {window.location = 'skp:pro_details@'+ str;}, 100);			
+		setTimeout(function() {window.location = 'skp:pro_details@'+ str;}, 500);
 	});
 });
 
 function changePager(){
 	document.getElementById("load").style.display = "none";
-	// $('#page_content').load("load_wall.html");
-	document.getElementById('add_wall').click();
+	document.getElementById('add_space').click();
 }
 
 function enableskip(){

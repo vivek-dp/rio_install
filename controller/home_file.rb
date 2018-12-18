@@ -1,15 +1,6 @@
 require 'json'
 
 module Decor_Standards
-	def onLButtonDown(flags, x, y, view)
-  	@model = Sketchup.active_model
- 		@sel = @model.selection[0]
-
-	  time = Time.now.strftime('%d-%m-%Y-%H:%M:%S')
-	  puts time, @sel
-	  add = @sel.set_attribute(@dict_name, 'sp_name', time)
-	end
-
 	UI.add_context_menu_handler do |menu|
 		model = Sketchup.active_model
 		selection = model.selection[0]
@@ -103,6 +94,29 @@ module Decor_Standards
 			$rio_dialog.execute_script(jscpage)
 		}
 
+		$rio_dialog.add_action_callback("getspacelist"){|a, b|
+			value = ["test", "test1", "test2", "test3", "test4"]
+			# value = []
+			getlist = self.add_option(value)
+			jsadd = "passSpaceList("+getlist.to_s+")"
+		 	$rio_dialog.execute_script(jsadd)
+		}
+
+		$rio_dialog.add_action_callback("get-spdetail"){|a, b|
+			spdetail = self.get_space_detail(b)
+			if spdetail['door'] == true
+				jsdoor = "document.getElementById('show_doorheight').style.display='block';"
+				$rio_dialog.execute_script(jsdoor)
+			end
+			if spdetail['window'] == true
+				jswino = "document.getElementById('show_winoff').style.display='block';"
+				$rio_dialog.execute_script(jswino)
+				sleep 0.1
+				jswinh = "document.getElementById('show_winheight').style.display='block';"
+				$rio_dialog.execute_script(jswinh)
+			end
+		}
+
 		$rio_dialog.add_action_callback("submitval"){|i, j|
 			# creat_wall = self.creating_wall(j)
 			param = JSON.parse(j)
@@ -168,8 +182,6 @@ module Decor_Standards
 			newarr.push(passval)
 			js_exped = "htmlDone("+newarr.to_s+")"
 			$rio_dialog.execute_script(js_exped)
-			# system(system('start %s' % (passval)))
-			# system(system('start %s' % (RIO_ROOT_PATH+"/Report/WorkingDrawing")))
 		}
 
 		$rio_dialog.add_action_callback("openfile"){|a, b|
@@ -193,6 +205,9 @@ module Decor_Standards
 				type = 0
 			end
 			mainsp = []
+			value = ["test", "test1", "test2", "test3", "test4"]
+			splist = self.add_option(value)
+			mainsp.push(splist)
 			maincat = self.get_main_space(params);
 			mainsp.push(maincat)
 			js_sp = "passSpace("+mainsp.to_s+", "+type.to_s+")"

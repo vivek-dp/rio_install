@@ -19,7 +19,8 @@ $(document).ready(function(){
 
 function passSpace(val, type){
 	if (val != ""){
-		document.getElementById('load_space').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Main Category:</div>'+val+'</div></div></div>';
+		$('#load_space_list').html('<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Space Name:</div>'+val[0]+'</div></div></div>')
+		$('#load_space').html('<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Main Category:</div>'+val[1]+'</div></div></div>')
 	}
 	if (type == 1){changeSpaceCategory()}
 }
@@ -177,6 +178,7 @@ function createcomp(val){
 	}
 	
 	if (val == 0){json['edit'] = 0}else if(val == 1){json['edit'] = 1}
+	json['space-name'] = $('#space_list').val();
 	json['main-category'] = $('#main-space').val();
 	json['sub-category'] = $('#sub-space').val();
 	json['carcass-code'] = $('#carcass-code').val();
@@ -197,8 +199,7 @@ function createcomp(val){
 
 	var str = JSON.stringify(json);
 	$('#load').css("display", "block");
-	// document.getElementById("load").style.display = "block";
-	setTimeout(function() {window.location = 'skp:send_compval@'+ str;}, 100);
+	setTimeout(function() {window.location = 'skp:send_compval@'+ str;}, 500);
 }
 
 function sentcompVal(v){

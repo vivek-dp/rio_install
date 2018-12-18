@@ -15,6 +15,27 @@ module Decor_Standards
 		# puts "draw------------",input
 	end
 
+	def self.add_option(input)
+		arrval = []
+		if input.count != 0
+			mainspace = ""
+			input.each {|val|
+				mainspace += '<option value="'+val+'">'+val+'</option>'
+			}
+			mainspace1 = '<select class="ui dropdown" id="space_list" onchange="changeSpaceList(this.value)"><option value="0">Select...</option>'+mainspace+'</select>'
+			arrval.push(mainspace1)
+		end
+		return arrval
+	end
+
+	def self.get_space_detail(input)
+		json = {}
+		json['door'] = false
+		json['window'] = false
+
+		return json
+	end
+
 	def self.generate_html
 		dict_name = 'carcase_spec'
 		mainarr = []
