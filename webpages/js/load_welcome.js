@@ -23,7 +23,7 @@ $(document).ready(function(){
 		}
 		var str = JSON.stringify(json);
 		$('#load').css("display", "block")
-		setTimeout(function() {window.location = 'skp:pro_details@'+ str;}, 1000);			
+		setTimeout(function() {window.location = 'skp:pro_details@'+ str;}, 100);			
 	});
 });
 
@@ -48,5 +48,7 @@ function uptAttrValue(inp){
 		var sval = inp[i].split("|")
 		$('#'+sval[0]).val(sval[1]);
 	}
-	$('#startproject').removeClass("disabled")
+	if ($('#client_name').val() != "" && $('#project_name').val() != ""){
+		$('#startproject').removeClass("disabled")
+	}
 }

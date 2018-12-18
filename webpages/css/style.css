@@ -67,6 +67,7 @@ option {
   padding: .5833em .833em;
   color: lightgray;
   font-weight: 700;
+  text-align: right;
   -webkit-transition: background .1s ease;
 }
 .ui.checkbox label {

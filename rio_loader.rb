@@ -2,6 +2,7 @@ RIO_ROOT_PATH = File.join(File.dirname(__FILE__))
 SUPPORT_PATH = File.join(File.dirname(__FILE__))
 CONTROL_PATH = File.join(SUPPORT_PATH, 'controller')
 WEBDIALOG_PATH   = File.join(SUPPORT_PATH, 'webpages/html')
+SKETCHUP_CONSOLE.show
 
 begin
  require 'mysql'

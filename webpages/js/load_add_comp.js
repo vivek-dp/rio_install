@@ -1,52 +1,49 @@
 $(document).ready(function(){
-	$('#show_custcomp').css("display", "block");
 	window.location = 'skp:getspace@' + 1;
 
-	// $(document).on("click", ".comp1", function () { 
- //    $(this).addClass("orange");
- //    $('#clkcustcomp').removeClass("orange");
- //    $('#show_listcomp').css("display", "block");
- //    $('#show_custcomp').css("display", "none");
- //    window.location = 'skp:loadmaincatagory@' + 1;
-	// });
+	$('#btn-shut').on('click', function(){
+		var newarr = [];
+		newarr.push($('#main-space').val())
+		newarr.push($('#sub-space').val())
+		newarr.push($('#carcass-code').val())
+		window.location = 'skp:show_shutter@'+ newarr;
+	});
 
-	// $(document).on("click", ".comp2", function () {
- //    $(this).addClass("orange");
- //    $('#clkaddcomp').removeClass("orange");
- //    $('#show_listcomp').css("display", "none");
- //    $('#show_custcomp').css("display", "block");
- //    // window.location = 'skp:getspace@' + 1;
- //  });
+	$('#btn-int').on('click', function(){
+		var getc = $('#carcass-code').val();
+		getc = getc.split("_")
+		window.location = 'skp:show_int_html@'+ getc[1];
+	});
+
 });
 
-
-// ------------------- Add Customize Components - Start
-
-function passSpace(val){
-	document.getElementById('load_space').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Main Category:</div>'+val+'</div></div></div>';
+function passSpace(val, type){
+	if (val != ""){
+		document.getElementById('load_space').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Main Category:</div>'+val+'</div></div></div>';
+	}
+	if (type == 1){changeSpaceCategory()}
 }
 
 function changeSpaceCategory(){
 	document.getElementById('load_subcat').innerHTML = "";
-	document.getElementById('newupdate').innerHTML = "";
+	document.getElementById('new').style.display = "none";
 	var val = document.getElementById('main-space').value;
 	if (val != 0) {
 		window.location = 'skp:get_cat@' + val;
-	}else{
-		// document.getElementById('load_subcat').innerHTML = "";
-		// document.getElementById('newupdate').innerHTML = "";
-		// document.getElementById('load_sketchup').innerHTML = "";
 	}
 }
 
-function passsubCat(input){
+function passsubCat(input, type){
 	document.getElementById('load_subcat').innerHTML = "";
 	document.getElementById('load_carcass').innerHTML = "";
-	document.getElementById('load_subcat').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Sub Category:</div>'+input+'</div></div></div>';
+	if (input != ""){
+		document.getElementById('load_subcat').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Sub Category:</div>'+input+'</div></div></div>';
+	}
+	if (type == 1){changesubSpace()}
 }
 
 function changesubSpace(){
-	document.getElementById('newupdate').innerHTML = "";
+	document.getElementById('new').style.display = "none";
 	$('#expcomp').addClass("disabled")
 	var maival = document.getElementById('main-space').value;
 	var subval = document.getElementById('sub-space').value;
@@ -56,8 +53,11 @@ function changesubSpace(){
 	}
 }
 
-function passCarCass(inp){
-	document.getElementById('load_carcass').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Carcass Code:</div>'+inp+'</div></div></div>';
+function passCarCass(inp, type){
+	if (inp != ""){
+		document.getElementById('load_carcass').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Carcass Code:</div>'+inp+'</div></div></div>';
+	}
+	if (type == 1){changeProCode()}
 }
 
 function changeProCode(){
@@ -71,250 +71,136 @@ function changeProCode(){
 	}
 }
 
-function passDataVal(val){
+function passDataVal(val, type){
 	var nhash = {};
 	for (var i = 0; i < val[2].length; i++){
 		var splitval = val[2][i].split("|")
-		// alert(splitval[0]+" - "+splitval[1])
 		nhash[splitval[0]] = splitval[1]
 	}
 	$origin = nhash['shut_org']
-
+	
 	if (val[0].length != undefined){
-		var int_cat = "";
-		var load_intcat = "";
-		for (var j = 0; j < val[0].length; j++){
-			int_cat += '<option value="'+val[0][j]+'">'+val[0][j]+'</option>'
-		}
-		var int_cat1 = '<select class="ui dropdown" id="int_category"><option value="0">Select...</option>'+int_cat+'</select>'
-		var load_intcat = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Internal Type:&nbsp;&nbsp;<i class="question circle outline icon info-icon" onclick="show_int_cat()"></i></div>'+int_cat1+'</div></div></div>';
+		$('#btn-int').css("display", "block");
 	}else{
-		var load_intcat = ''
+		$('#internal-cat').html('');
+		$('#btn-int').css("display", "none");
 	}
-
-	// alert(nhash['shutter_code'].includes("/"))
-	var res = val[1].replace(/skp/g, "jpg");
+	
 	var load_shut = "";
 	var load_mat = "";
 	if (nhash['type'] != ""){
-		var load_door = '<div>Door Type:&emsp;<input type="hidden" id="door_type" value="'+nhash['type']+'"><span style="color: white !important;">'+nhash['type']+'</span></div>'
+		load_door = '<div class="column">Door Type</div><div class="column"><input type="hidden" id="door_type" value="'+nhash['type']+'"><span style="color: white !important;">'+nhash['type']+'</span></div>'
 	}
+	$('#door-type').html(load_door)
 
-	$sv = "";
-	var shutter_val = "";
-	if (nhash['shutter_code'].includes("/") == false && nhash['shutter_code'] != "No"){
-		var load_stcode = '<div>Shutter Code:&emsp;<span style="color: white !important;">'+nhash['shutter_code']+'</span></div>'
-		$sv = nhash['shutter_code']
-		shutter_val = '';
+	if (nhash['shutter_code'].includes("/") == true){
+		$('#shut_code').val('');
+		load_shutcode = ''
+		$('#btn-shut').css("display", "block");
 	}else{
-		shutter_val = nhash['shutter_code']
-	}
-
-	var showmat = 0
-	var scount = 0
-	if (nhash['solid'] == "Yes" & nhash['glass'] == "Yes"){
-		showmat = 1
-		load_shut += '<div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="shuttype" value="solid" id="chksolid" onclick="sho_mat(0)"><label>Solid</label></div></div></div><div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="shuttype" value="glass" id="chkglass" onclick="sho_mat(1)"><label>Glass</label></div></div></div>'
-		scount = 2
-	}else if (nhash['solid'] == "Yes" & nhash['glass'] == "No"){
-		load_shut += '<div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="shuttype" value="solid" id="chksolid" checked><label>Solid</label></div></div></div>'
-		scount = 1
-	}else if (nhash['solid'] == "No" & nhash['glass'] == "Yes"){
-		load_shut += '<div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="shuttype" value="glass" id="chkglass" checked><label>Glass</label></div></div></div>'
-		scount = 1
-	}
-
-	var mcount = 0
-	if (nhash['glass'] == "Yes"){
-		if (nhash['alu'] == "Yes" & nhash['ply'] == "Yes"){
-			load_mat += '<div class="column"><input type="hidden" value="'+shutter_val+'" id="shutter_val"><div class="field"><div class="ui radio checkbox"><input type="radio" name="mattype" value="aluminium" id="alu" onclick="show_shut(1)"><label>Aluminium</label></div></div></div><div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="mattype" value="plywood" id="alu" onclick="show_shut(2)"><label>Plywood</label></div></div></div>'
-			mcount = 2
-		}else if (nhash['alu'] == "Yes" & nhash['ply'] == "No"){
-			load_mat += '<div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="mattype" value="aluminium" id="alu" checked><label>Aluminium</label></div></div></div>'
-			mcount = 1
-		}else if (nhash['alu'] == "No" & nhash['ply'] == "Yes"){
-			load_mat += '<div class="column"><div class="field"><div class="ui radio checkbox"><input type="radio" name="mattype" value="plywood" id="alu" checked><label>Plywood</label></div></div></div>'
-			mcount = 1
-		}
-		// load_mat += '<div class="field"><div class="ui radio checkbox"><input type="radio" name="mattype" value="aluminium" id="alu"><label>Aluminium</label></div></div>'
-	}
-	
-	if (load_shut != ""){
-		if (scount == 2){var sheader = 'Select Shutter Type'}else if (scount == 1){var sheader = 'Shutter Type'}
-		var load_shut1 = '<h5 class="ui dividing header">'+sheader+'</h5><div class="ui two column grid">'+load_shut+'</div>'
-	}else{var load_shut1 = ''}
-	
-	if (load_mat != ""){
-		if (mcount == 2){var mheader = 'Select Material Type'}else if (mcount == 1){var mheader = 'Material Type'}
-		if (showmat == 1){
-			var load_mat1 = '<div id="show_material" style="display:none;margin-top:10px;"><h5 class="ui dividing header">'+mheader+'</h5><div class="ui two column grid">'+load_mat+'</div></div>'
+		if (type == 1 && (nhash['shutter_code'].includes("AF") == true || nhash['shutter_code'].includes("PF") == true)){
+		$('#btn-shut').css("display", "block");	
+		}else{$('#btn-shut').css("display", "none");}		
+		if (nhash['shutter_code'] != 'No'){
+			$('#shut_code').val(nhash['shutter_code']);
+			load_shutcode = '<div class="column">Shutter Code</div><div class="column"><span style="color: white !important;">'+nhash['shutter_code']+'</span></div>'
 		}else{
-			var load_mat1 = '<h5 class="ui dividing header">'+mheader+'</h5><div class="ui two column grid">'+load_mat+'</div>'
+			$('#shut_code').val(nhash['shutter_code']);
+			load_shutcode = ''
 		}
-	}else{var load_mat1 = ''}
+	}
+	$('#shutter-code').html(load_shutcode)
 
-	if (load_stcode == undefined){
-		load_stcode = ''
+	if (nhash['solid'] == "Yes" & nhash['glass'] == "No"){
+		shut_type = '<div class="column">Shutter Type</div><input type="hidden" value="solid" id="shttype"><div class="column"><span style="color:white !important;">Solid</span></div>'
+	}else if (nhash['solid'] == "No" & nhash['glass'] == "Yes"){
+		shut_type = '<div class="column">Shutter Type</div><input type="hidden" value="glass" id="shttype"><div class="column"><span style="color:white !important;">Glass</span></div>'
+	}
+	$('#shutter-type').html(shut_type)
+
+	$('#new').css("display", "block")
+	var res = val[1].replace(/skp/g, "jpg");
+	$('#carcass-img').html('<span style="color:#FF2000;">Carcass Image:</span><img src="'+res+'" height="200" width="220" style="margin-top:2px;">');
+	$('#expcomp').removeClass("disabled")
+	
+	if (type == 1){
+		if ($('#main-space').val().includes("Sliding") || $('#main-space').val().includes("sliding")){
+			window.location = 'skp:load-internal@'+1;
+		}else{
+			window.location = 'skp:updateglobal@'+1;
+		}
+	}
+}
+
+function passIntJs(vals, cat, type){
+	var valstr = "";
+	for (var k = 0; k < vals.length; k++){
+		var spval = vals[k].split("|")
+		var hname = spval[0].capitalize();
+		if (spval[1] != "no"){
+			valstr += '<div class="row"><div class="column" style="width:30% !important;">'+hname+':</div><div class="column" style="color: white;width:70% !important;">'+spval[1]+'</div></div>'
+		}
+	}
+	var load_int = '<div class="ui stackable two column grid">'+valstr+'</div>'
+	$('#internal_code').val(cat)
+	$('#internal-cat').html('<h5 class="ui dividing header">Internal Catgory</h5>'+load_int)
+	$('#showint').css("margin-top", "10px");
+
+	if (type == 2 && $('#page_type').val() == 1){
+		$('#uptcomp').removeClass("disabled");
+	}else{
+		$('#uptcomp').addClass("disabled");
+	}
+	window.location = 'skp:updateglobal@'+1;
+}
+
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+function passShutJs(v){
+	$('#shut_code').val(v[0]);
+	$('#shutter-code').html('<div class="column">Shutter Code</div><div class="column"><span style="color: white !important;">'+v[0]+'</span></div>')
+	if (v[1] == 1 && $('#page_type').val() == 1){
+		$('#uptcomp').removeClass("disabled");
+	}else{
+		$('#uptcomp').addClass("disabled");
+	}
+}
+
+function createcomp(val){
+	var json = {};
+
+	if ($('#shut_code').val() == "" && $('#shut_code').val() != "No"){
+		toastr.error('Please select a shutter to create!', 'Error');
+		return false
 	}
 	
+	if (val == 0){json['edit'] = 0}else if(val == 1){json['edit'] = 1}
+	json['main-category'] = $('#main-space').val();
+	json['sub-category'] = $('#sub-space').val();
+	json['carcass-code'] = $('#carcass-code').val();
+	json['door-type'] = $('#door_type').val();
+	json['shutter-code'] = $('#shut_code').val();
+	json['shutter-type'] = $('#shttype').val();
+	json['shutter-origin'] = $origin
 
-	var newo = load_intcat+'<div class="ui grid" style="margin-top: .5em;"><div class="eight wide column"><img src="'+res+'" height="200" width="220" "></div><div class="eight wide column"><input type="hidden" value="" id="shut_value"><div id="show_shutcode"></div>'+load_stcode+load_door+load_shut1+load_mat1+'</div></div>'
-	document.getElementById('newupdate').innerHTML = newo;
-	$('#expcomp').removeClass("disabled")
-}
-
-function show_int_cat(){
-	var getc = $('#carcass-code').val();
-	getc = getc.split("_")
-	window.location = 'skp:show_int_html@'+ getc[1];
-}
-
-function show_shut(inp){
-	var val = document.getElementById('shutter_val').value;
-	var splitval = val.split("/")
-	var scode = "";
-	if (inp == 1){
-		if (splitval[0].includes("AF") == true){
-			scode = splitval[0]
-		}else{scode = ''}
-	}else if (inp == 2){
-		if (splitval[1].includes("PF") == true){
-			scode = splitval[1]
-		}else{scode=''}
+	if ($('#main-space').val().includes("Sliding") || $('#main-space').val().includes("sliding")){
+		var intval = $('#internal_code').val();
+		if (intval == ""){
+			toastr.error('Please select a Internal category!', 'Error');
+			return false
+		}else{
+			json['internal-category'] = intval;
+		}
 	}
-	document.getElementById('show_shutcode').innerHTML = '<div>Shutter Code:&emsp;<span style="color: white !important;">'+scode+'</span></div>'
-	document.getElementById('shut_value').value = scode;
-	$sv = scode;
+
+	var str = JSON.stringify(json);
+	$('#load').css("display", "block");
+	// document.getElementById("load").style.display = "block";
+	setTimeout(function() {window.location = 'skp:send_compval@'+ str;}, 100);
 }
-
-function sho_mat(val){
-	if (val == 1){
-		document.getElementById('show_material').style.display = "block";
-	}else{
-		document.getElementById('show_material').style.display = "none";
-	}
-}
-
-$(document).ready(function(){
-  var json = {};
-  $('#expcomp').on('click', function(){
-  	$('#shut_value').val($sv);
-
-  	var sutcot = $('[name="shuttype"]').length;
-  	var sutlen = $('[name="shuttype"]:checked').length;
-  	
-  	if (sutcot != 0 && sutlen == 0){
-			toastr.error("Shutter type can't be blank!", 'Error');
-			return false;
-  	}
-
-  	var matcot = $('[name="mattype"]').length;
-  	var matlen = $('[name="mattype"]:checked').length;
-  	if (matcot != 0 && matlen == 0){
-  		toastr.error("Material type can't be blank!", 'Error');
-  		return false;
-  	}
-
-  	if ($('#main-space').val().includes("Sliding") || $('#main-space').val().includes("sliding")){
-  		var inter = $('#int_category').val();
-  		if (inter == 0){
-  			toastr.error("Internal category can't be blank!", 'Error');
-  			return false
-  		}else{
-  			json['internal-category'] = inter;
-  		}
-  	}
-  	
-		json['main-category'] = $('#main-space').val();
-		json['sub-category'] = $('#sub-space').val();
-		json['carcass-code'] = $('#carcass-code').val();
-		json['shutter-code'] = $('#shut_value').val();
-		json['door-type'] = $('#door_type').val()
-		json['shutter-type'] = $('[name="shuttype"]:checked').val();
-		json['material-type'] = $('[name="mattype"]:checked').val();
-		json['shutter-origin'] = $origin
-		
-		var str = JSON.stringify(json);
-		document.getElementById("load").style.display = "block";
-		setTimeout(function() {window.location = 'skp:send_compval@'+ str;}, 200);
-  });
-});
 
 function sentcompVal(v){
 	document.getElementById("load").style.display = "none";
 }
-// ------------------- Add Customize Components - End
-
-
-// ------------------- Add Standard Components - Start
-// function passMainCategoryToJs(main){
-// 	document.getElementById('load_maincategory').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Main Category:</div>'+main+'</div></div></div>';
-// }
-
-// function changeMainCategory() {
-// 	var val = document.getElementById('main-category').value;
-// 	if (val != 0) {
-// 		window.location = 'skp:get_category@' + val;
-// 	}else{
-// 		document.getElementById('load_subcategory').innerHTML = "";
-// 		document.getElementById('load_sketchup').innerHTML = "";
-// 	}
-// }
-
-// function passSubCategoryToJs(cat){
-// 	document.getElementById('load_sketchup').innerHTML = "";
-// 	document.getElementById('load_subcategory').innerHTML = "";
-// 	document.getElementById('load_subcategory').innerHTML = '<div class="ui form"><div class="field"><div class="ui labeled input"><div class="ui label">Sub Category:</div>'+cat+'</div></div></div>';
-// }
-
-// function changeSubCategory(){
-// 	var maincat = document.getElementById('main-category').value;
-// 	var subcat = document.getElementById('sub-category').value;
-// 	if (subcat != 0){
-// 		var value = maincat +","+ subcat
-// 		window.location = 'skp:load-sketchupfile@' + value;
-// 	}
-// }
-
-// function passSkpToJavascript(value) {
-// 	document.getElementById('load_sketchup').innerHTML = "";
-// 	var skpimg = "";
-// 	if (value.length != 0){
-// 		for (var i = 0; i < value.length; i++) {
-// 			var split_val = value[i].split("/")
-// 			var mname = split_val.slice(-1)
-// 			var ename = mname[0].split(".")
-// 			var res = value[i].replace(/skp/g, "jpg");
-// 			skpimg += '<tr><td><div class="ui equal width grid"><div class="column" style="text-align:center;"><input type="hidden" id="imgicon_'+[i]+'" value="'+value[i]+'"><img src="'+res+'" height="40" width="50" "></div><div class="column" style="text-align:left;"><span style="vertical-align:top;line-height:40px;">'+ename[0]+'</span></div><div class="column" style="text-align:right;margin-top: 5px;"><button class="mini ui google plus vertical animated button" style="vertical-align:top;" onclick="viewimg('+[i]+')"><div class="visible content">VIEW</div><div class="hidden content"><i class="eye icon"></i></div></button></div><div class="column" style="margin-top: 5px;"><button class="mini ui positive animated button" style="vertical-align:top;" onclick="checkImage('+[i]+');"><div class="visible content">ADD</div><div class="hidden content"><i class="plus icon"></i></div></button></div></div></td></tr>'
-// 		}
-// 	} else {
-// 		skpimg = '<tr><td style="text-align:center;"><i class="exclamation triangle icon" style="color:red; font-size:36px;"></i>&emsp;<span style="color:red;"><b>No file found!</b></span></td></tr>'
-// 	}	
-// 	var img = '<table class="ui inverted right aligned table">'+skpimg+'</table>';
-// 	document.getElementById('load_sketchup').innerHTML = img;
-// }
-
-// function checkImage(id){
-// 	var getid = document.getElementById("imgicon_"+id).value;
-// 	window.location = 'skp:place_model@' + getid;
-// }
-
-// function viewimg(id){
-// 	var imgarr = [];
-// 	var getid = document.getElementById("imgicon_"+id).value;
-// 	var split_val = getid.split("/")
-// 	var mname = split_val.slice(-1)
-// 	var ename = mname[0].split(".")
-// 	var resp = getid.replace(/skp/g, "jpg");
-
-// 	imgarr.push(ename[0])
-// 	imgarr.push(resp)
-
-
-// 	window.location = 'skp:open_modal@' + imgarr;
-
-// 	// document.getElementById('mhead').innerHTML = ename[0];
-// 	// document.getElementById('imgtag').innerHTML = '<img src="'+resp+'">'
-// 	// $('.openmodal').modal('show'); 
-// }
-// ------------------- Add Standard Components - End

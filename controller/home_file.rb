@@ -1,13 +1,29 @@
 require 'json'
 
 module Decor_Standards
-	UI.add_context_menu_handler do |menu|
-	  rbm = menu.add_submenu("Rio Tools")
-    rbm.add_item("Add Component") { self.add_comp_fom_menu }
-    rbm.add_item("Add Attribute") { self.add_attr_from_menu }
+	def onLButtonDown(flags, x, y, view)
+  	@model = Sketchup.active_model
+ 		@sel = @model.selection[0]
+
+	  time = Time.now.strftime('%d-%m-%Y-%H:%M:%S')
+	  puts time, @sel
+	  add = @sel.set_attribute(@dict_name, 'sp_name', time)
 	end
 
-	def self.add_comp_fom_menu
+	UI.add_context_menu_handler do |menu|
+		model = Sketchup.active_model
+		selection = model.selection[0]
+		rio_comp = selection.definition.get_attribute(:rio_atts, 'rio_comp')
+
+		if rio_comp == 'true'
+		  rbm = menu.add_submenu("Rio Tools")
+	    rbm.add_item("Add Component") { self.add_comp_from_menu }
+	    rbm.add_item("Add Attribute") { self.add_attr_from_menu }
+	    rbm.add_item("Edit/View Component") { self.edit_view_component }
+	  end
+	end
+
+	def self.add_comp_from_menu
 		$rio_dialog.show
 		js_cpage = "document.getElementById('add_comp').click();"
 		$rio_dialog.execute_script(js_cpage)
@@ -19,11 +35,30 @@ module Decor_Standards
 		$rio_dialog.execute_script(js_page)
 	end
 
+	def self.edit_view_component
+		$edit_val = 1
+		$rio_dialog.show
+		js_page = "document.getElementById('add_comp').click();"
+		$rio_dialog.execute_script(js_page)
+		sleep 0.1
+		jspage = "document.getElementById('page_type').value=1;"
+		$rio_dialog.execute_script(jspage)
+
+		model = Sketchup.active_model
+		selection = model.selection[0]
+
+		$main_category = selection.definition.get_attribute(:rio_atts, 'main-category')
+		$sub_category = selection.definition.get_attribute(:rio_atts, 'sub-category')
+		$carcass_code = selection.definition.get_attribute(:rio_atts, 'carcass-code')
+		$shutter_code = selection.definition.get_attribute(:rio_atts, 'shutter-code')
+		$door_type = selection.definition.get_attribute(:rio_atts, 'door-type')
+		$shutter_type = selection.definition.get_attribute(:rio_atts, 'shutter-type')
+		$internal_category = selection.definition.get_attribute(:rio_atts, 'internal-category')
+	end
+
 	def self.set_window(inp_page, key, value)
-		# js_upt = "passUptVal("+inp_page+','+key+','+value+")"
-		 js_cpage = "document.getElementById('#{inp_page}').click();"
-		# js_upt = "passUptVal(1)"
-		 $rio_dialog.execute_script(js_cpage)
+	 	js_cpage = "document.getElementById('#{inp_page}').click();"
+		$rio_dialog.execute_script(js_cpage)
 		sleep 0.1
 		js_1page = "document.getElementById('#{key}').value='#{value}';"
 		$rio_dialog.execute_script(js_1page)
@@ -150,42 +185,75 @@ module Decor_Standards
 		}
 
 		$rio_dialog.add_action_callback("getspace"){|a, b|
+			if $edit_val == 1
+				params = $main_category
+				type = 1
+			else
+				params = 0
+				type = 0
+			end
 			mainsp = []
-			maincat = self.get_main_space()
+			maincat = self.get_main_space(params);
 			mainsp.push(maincat)
-			js_sp = "passSpace("+mainsp.to_s+")"
+			js_sp = "passSpace("+mainsp.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_sp)
 		}
 
 		$rio_dialog.add_action_callback("get_cat"){|a, b|
 			subcat = []
-			subsp = self.get_sub_space(b)
+
+			if $edit_val == 1
+				params = []
+				params.push($main_category)
+				params.push($sub_category)
+				type = 1
+			else
+				params = b
+				type = 0
+			end
+			subsp = self.get_sub_space(params, type)
 			subcat.push(subsp)
-			js_sub = "passsubCat("+subcat.to_s+")"
+			js_sub = "passsubCat("+subcat.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_sub)
 		}
 
 		$rio_dialog.add_action_callback("load-code"){|a, b|
 			sp = b.split(",")
 			parr = []
-			getcode = self.get_pro_code(sp)
+			if $edit_val == 1
+				params = []
+				params.push($main_category)
+				params.push($sub_category)
+				params.push($carcass_code)
+				type = 1
+			else
+				params = sp
+				type = 0
+			end
+			getcode = self.get_pro_code(params, type)
 			parr.push(getcode)
-			js_pro = "passCarCass("+parr.to_s+")"
+			js_pro = "passCarCass("+parr.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_pro)
 		}
 
 		$rio_dialog.add_action_callback("load-datas"){|a, b|
-			puts "b : #{b}"
-			#spinp = JSON.parse(b)
 			spinp = b.split(',')
+			$intval = spinp
 			newarr = []
+
+			if $edit_val == 1
+				type = 1
+			else
+				type = 0
+			end
 			get_int = self.get_internal_category(spinp)
 			newarr.push(get_int)
 			getskp = self.get_comp_image(spinp)
 			newarr.push(getskp)
-			getval = self.get_datas(spinp)
+			getval = self.get_datas(spinp, type)
 			newarr.push(getval)
-			js_data = "passDataVal("+newarr.to_s+")"
+
+			js_data = "passDataVal("+newarr.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_data)
 		}
 
@@ -201,31 +269,98 @@ module Decor_Standards
 			if b.to_i == 2
 				@html = "2_intcategory.html"
 				@title = "2 Door Sliding Internal Categories"
-				@w = 500
-				@h = 500
 			elsif b.to_i == 3
 				@html = "3_intcategory.html"
 				@title = "3 Door Sliding Internal Categories"
-				@w = 800
-				@h = 500
 			end
-			int_dialog = UI::HtmlDialog.new({:dialog_title=>@title, :preferences_key=>"com.sample.plugin", :scrollable=>true, :resizable=>true, :width=>@w, :height=>@h, :style=>UI::HtmlDialog::STYLE_DIALOG})
-			html_path = File.join(NEW_PAGE, @html)
+			int_dialog = UI::HtmlDialog.new({:dialog_title=>@title, :preferences_key=>"com.sample.plugin", :scrollable=>true, :resizable=>true, :width=>500, :height=>500, :style=>UI::HtmlDialog::STYLE_DIALOG})
+			html_path = File.join(WEBDIALOG_PATH, @html)
 			int_dialog.set_file(html_path)
 			int_dialog.set_position(0, 150)
 			int_dialog.show
+
+			int_dialog.add_action_callback("load_cat"){|k, l|
+				getint = self.get_internal_category($intval)
+				jsint = "passintval("+getint.to_s+")"
+				int_dialog.execute_script(jsint)
+			}
+
+			int_dialog.add_action_callback("getintcat"){|k, l|
+				int_dialog.close
+				if $internal_category == l
+					type = 0
+				else
+					type = 2
+				end
+				getvals = self.get_internal_data(l, $intval[2])
+				js_val = "passIntJs("+getvals.to_s+","+l+", "+type.to_s+")"
+				$rio_dialog.execute_script(js_val)
+			}
 		}
 
-		# $rio_dialog.add_action_callback("upt_client"){|a, b|
-		# 	cli_name = Sketchup.active_model.get_attribute(:rio_global, 'client_name')
-		# 	cli_id = Sketchup.active_model.get_attribute(:rio_global, 'client_id')
+		$rio_dialog.add_action_callback("show_shutter"){|a, b|
+			@title = "Shutter Type"
+			shutdialog = UI::HtmlDialog.new({:dialog_title=>@title, :preferences_key=>"com.sample.plugin", :scrollable=>true, :resizable=>true, :width=>500, :height=>500, :style=>UI::HtmlDialog::STYLE_DIALOG})
+			html_path = File.join(WEBDIALOG_PATH, 'select_shutter.html')
+			shutdialog.set_file(html_path)
+			shutdialog.set_position(0, 150)
+			shutdialog.show
 
-		# 	js_cname = "document.getElementById('client_name').value='#{cli_name}'"
-		# 	$rio_dialog.execute_script(js_cname)
-		# 	sleep 0.1
-		# 	js_cid = "document.getElementById('client_id').value='#{cli_id}'"
-		#  	$rio_dialog.execute_script(js_cid)
-		# }
+			shutdialog.add_action_callback("load_shutimg"){|k, v|
+				spval = b.split(",")
+				getimg = self.get_shutter_image(spval)
+				
+				for i in getimg
+					spval = i.split("/")
+					@sname = spval.last.gsub(".jpg", "")
+					@image = "<img src="+i+" width=250 height=200>"
+					if spval.last.include?("AF")
+						jsalu = "document.getElementById('alname').innerHTML='#{@sname}';"
+						shutdialog.execute_script(jsalu)
+						sleep 0.1
+						jsval = "document.getElementById('alvalue').value='#{@sname}';"
+						shutdialog.execute_script(jsval)
+						sleep 0.1
+						alimg = "document.getElementById('alimage').innerHTML='#{@image}';"
+						shutdialog.execute_script(alimg)
+					elsif spval.last.include?("PF")
+						jsply = "document.getElementById('plname').innerHTML='#{@sname}';"
+						shutdialog.execute_script(jsply)
+						sleep 0.1
+						jsval = "document.getElementById('plvalue').value='#{@sname}';"
+						shutdialog.execute_script(jsval)
+						sleep 0.1
+						plimg = "document.getElementById('plimage').innerHTML='#{@image}';"
+						shutdialog.execute_script(plimg)
+					end
+				end
+			}
+
+			shutdialog.add_action_callback("select_shutter"){|k, v|
+				shutdialog.close
+				arr = []
+				arr.push(v)
+				if $shutter_code == v
+					arr.push(0)
+				else
+					arr.push(1)
+				end
+				jsval = "passShutJs("+arr.to_s+")"
+				$rio_dialog.execute_script(jsval)
+			}
+		}
+
+		$rio_dialog.add_action_callback("load-internal"){|a, b|
+			cc = $carcass_code
+			spval = cc.split("_")
+			getd = self.get_intnal($internal_category, spval)
+			js_val = "passIntJs("+getd.to_s+","+$internal_category.to_s+", "+1.to_s+")"
+			$rio_dialog.execute_script(js_val)
+		}
+
+		$rio_dialog.add_action_callback("updateglobal"){|a, b|
+			$edit_val = 0
+		}
 	end
 end
 

@@ -16,7 +16,7 @@
 
 <body>
 	<div class="ui active dimmer" id="load" style="display: none;">
-    <div class="ui text loader">Please wait...</div>
+    <div class="ui text loader">Initializing...<br>Please wait a few seconds...</div>
   </div>
 	<div class="ui container-fluid">
 		<h1 class="head-logo">R<span style="font-size: 22px;">io</span>STD<span style="color: darkcyan; font-size: 18px; letter-spacing: 1px;"> v1.0</span></b></h1>
@@ -52,10 +52,7 @@
 			      			<div id="showon" class="net-text" style="color: green; display: none;"><div class="ui green empty circular label"></div>&nbsp;&nbsp;Online</div>
 			      		</div>
 			      		<div class="column" style="text-align: right;">
-			      			<div class="ui inverted animated red button">
-			      				<div class="visible content">Login</div>
-			      				<div class="hidden content" id="clicklogin"><i class="right arrow icon"></i></div>
-			      			</div>
+			      			<button class="ui inverted red button" id="clicklogin">Login</button>
 			      		</div>
 			      	</div>
 			      	<div class="net-note" id="showoffnote"><b><u>NOTE:</u></b> Connect to the Internet, reopen RioSTD.</div>
