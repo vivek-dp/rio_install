@@ -683,8 +683,9 @@ module DP
 			Sketchup.send_action("viewIso:")
 			Sketchup.active_model.active_view.write_image image_file_name
 
+			es = Sketchup.active_model.entities
 			es.each{|x| es.erase_entities x }
-			File.delete(skb_path) if File.exists(skb_path)
+			File.delete(skb_path) if File.exists?(skb_path)
 		}
 		return files.length
 	end
@@ -849,9 +850,9 @@ module DP
                 center_def  = int_defn
             else
                 #-------------------------------------------------------------------------------------
-                rhs_file_name = "%dINT_%d_%d"%[doors, internal, door_width]
-                lhs_file_name = "%dINT_%d_%d"%[doors, internal, door_width]
-                center_file_name = "%dINT_%d_%d"%[doors, internal, door_width]
+                rhs_file_name = "%dINT_%dRHS_%d"%[doors, internal, door_width]
+                lhs_file_name = "%dINT_%dLHS_%d"%[doors, internal, door_width]
+                center_file_name = "%dINT_%dLHS_RHS_%d"%[doors, internal, door_width]
 
                 #-------------------------------------------------------------------------------------
                 rhs_internal_skp         = rhs_file_name+'.skp'
@@ -870,15 +871,18 @@ module DP
                 end
                 lhs_def = model.definitions.load(local_internal_path)
                 #-------------------------------------------------------------------------------------
-                center_internal_skp         = center_file_name+'.skp'
-                aws_internal_path    = File.join('internal',center_internal_skp)
-                local_internal_path  = File.join(RIO_ROOT_PATH,'cache',center_internal_skp)
-                unless File.exists?(local_internal_path)
-                    RioAwsDownload::download_file bucket_name, aws_internal_path, local_internal_path
-                end
-                center_def = model.definitions.load(local_internal_path)
+                if doors == 3
+	                center_internal_skp         = center_file_name+'.skp'
+	                aws_internal_path    = File.join('internal',center_internal_skp)
+	                local_internal_path  = File.join(RIO_ROOT_PATH,'cache',center_internal_skp)
+	                unless File.exists?(local_internal_path)
+	                    RioAwsDownload::download_file bucket_name, aws_internal_path, local_internal_path
+	                end
+	                center_def = model.definitions.load(local_internal_path)
+	              end
             end
 
+            es = Sketchup.active_model.entities
             #Just to get the width and height of the internals....Skip if necessary
             inst        = es.add_instance lhs_def, ORIGIN
             lhs_height  = inst.bounds.height

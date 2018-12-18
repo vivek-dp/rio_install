@@ -16,7 +16,7 @@
 
 <body>
 	<div class="ui active dimmer" id="load" style="display: none;">
-    <div class="ui text loader">Please wait...</div>
+    <div class="ui text loader">Initializing...<br>Please wait a few seconds...</div>
   </div>
 	<div class="ui container-fluid">
 		<h1 class="head-logo">R<span style="font-size: 22px;">io</span>STD<span style="color: darkcyan; font-size: 18px; letter-spacing: 1px;"> v1.0</span></b></h1>
@@ -31,7 +31,7 @@
 			    <div class="ui raised segment" style="background: #333 !important;">
 			      <div class="ui red ribbon label" style="height: 35px; font-size: 15px !important;"><i class="user outline icon"></i>Login</div>
 			      <span class="log-head">Welcome to RioSTD</span>
-			      <form class="ui form"><br>
+			      <div class="ui form"><br>
 			      	<div class="field">
 			      		<div class="ui left icon input">
 			      			<input type="email" id="email" placeholder="Email..." onblur="chkemail()" autofocus="true" value="test_user1@decorpot.com">
@@ -52,11 +52,11 @@
 			      			<div id="showon" class="net-text" style="color: green; display: none;"><div class="ui green empty circular label"></div>&nbsp;&nbsp;Online</div>
 			      		</div>
 			      		<div class="column" style="text-align: right;">
-			      			<button class="ui inverted red button" type="submit" id="clicklogin">Login</button>
+			      			<button class="ui inverted red button" id="clicklogin">Login</button>
 			      		</div>
 			      	</div>
 			      	<div class="net-note" id="showoffnote"><b><u>NOTE:</u></b> Connect to the Internet, reopen RioSTD.</div>
-			      </form>
+			      </div>
 			    </div>
 			  </div>
 			</div>

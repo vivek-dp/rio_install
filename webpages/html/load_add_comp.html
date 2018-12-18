@@ -2,47 +2,55 @@
 <html>
 <head>
 	<script type="text/javascript" src="../js/load_add_comp.js"></script>
+	<style>
+		.ui.grid>.row {padding-bottom: 0px !important; padding-top: 0.2rem !important;}
+		.ui.grid>.row>.column {padding-right: 0px !important; text-align: left !important;}
+		.ui.grid>.column:not(.row) {padding-top: 1rem; padding-bottom: 0rem;}
+		.ui.stackable.grid>.row>.column {padding: 0.2rem 0.9rem!important;}
+		.fieldcls {border-color: dimgray; border-radius: 5px;margin-top: 10px;padding-bottom: 1.5em;padding-top: 1em;}
+		.do {background-color: orangered !important; color: white !important;}
+	</style>
 </head>
 <body>
+	<input type="hidden" id="page_type" value="0">
 	<div class="ui equal width form right-pad">
-		<!-- <div class="ui form" style="text-align: center;">
-			<div class="ui buttons">
-			  <button class="ui button comp1" id="clkaddcomp" style="width: 215px;">Components</button>
-			  <div class="or"></div>
-			  <button class="ui orange button comp2" id="clkcustcomp" style="width: 215px;">Carcass Components</button>
-			</div>
-		</div> -->
-		<div style="margin-top: 1em;">&nbsp;</div>
-
-		<!-- <div id="show_listcomp" style="display: none;">
-			<div class="column">
-				<div id="load_maincategory"></div>
-				<div style="margin-top: .5em;">&nbsp;</div>
-				<div id="load_subcategory"></div>
-				<div style="margin-top: .5em;">&nbsp;</div>
-				<div id="load_sketchup"></div>
-			</div>
-		</div> -->
-
-		<div id="show_custcomp" style="display: none;">
-			<div class="column">
-				<div id="load_space"></div>
-				<div style="margin-top: .1em;">&nbsp;</div>
-				<div id="load_subcat"></div>
-				<div style="margin-top: .1em;">&nbsp;</div>
-				<div id="load_carcass"></div>
-				<div style="margin-top: .1em;">&nbsp;</div>
-				<div id="newupdate"></div>
-
-				<div style="margin-top: 1em;">&nbsp;</div>
-				<div class="sixteen wide column">
-					<div style="text-align: center;">
-						<div class="ui disabled animated fade positive button" id="expcomp">
-							<div class="visible content" style="font-family: 'Poppins', sans-serif; font-weight: normal;">Create Component</div>
-							<div class="hidden content"><i class="plus icon"></i></div>
-						</div>
-						<!-- <button class="ui disabled positive button" id="expcomp">Export Component</button> -->
+		<div class="column">
+			<div id="load_space"></div>
+			<div id="load_subcat" style="margin-top:10px;"></div>
+			<div id="load_carcass" style="margin-top:10px;"></div>
+			
+			<div id="newupdate"></div>
+			
+			<div id="new" style="display: none; margin-top:1em;">
+				<div class="ui grid">
+					<div class="eight wide column">
+						<div id="carcass-img"></div>
+						<button class="mini ui right floated button do" id="btn-shut" style="display: none;">Select Shutter</button>
+						<button class="mini ui left floated button do" id="btn-int" style="display: none;">Select Internal</button>
 					</div>
+					<div class="eight wide column">
+						<div class="field">
+							<fieldset class="fieldcls">
+								<legend style="color:#FF2000;">&nbsp;Component Details:&nbsp;</legend>
+								<div class="ui equal width center aligned grid">
+									<div class="row" id="door-type"></div>
+									<input type="hidden" value="" id="shut_code">
+									<div class="row" id="shutter-code"></div>
+									<div class="row" id="shutter-type"></div>
+								</div>
+
+								<input type="hidden" value="" id="internal_code">
+								<div class="row" id="internal-cat" style="margin-top: 1.5em;"></div>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="sixteen wide column" style="margin: 3em 0em 1em 0em;">
+				<div style="text-align: center;">
+					<button class="ui disabled positive button" id="expcomp" onclick="createcomp(0)">Create Component</button>
+					<button class="ui disabled teal button" id="uptcomp" onclick="createcomp(1)">Update</button>
 				</div>
 			</div>
 		</div>

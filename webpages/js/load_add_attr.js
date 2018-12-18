@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	window.location = 'skp:loaddatas@' + 1;
+
 });
 
 function readOly(){
@@ -8,35 +9,45 @@ function readOly(){
 
 $ids = []
 function passValToJs(val){
+	var showfin = 0;
 	for(var i = 0; i < val.length; i++){
 		spval = val[i].split("|")
 		$ids.push(spval[0])
 		if (!spval[1] == true){
-			// document.getElementsByName('rawmat')[0].placeholder='new text for email';
 			if (spval[0] == "attr_right_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_rightlam').style.display = "block";
+				showfin = 1;
 			}else if (spval[0] == "attr_left_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_leftlam').style.display = "block";
+				showfin = 1;
 			}else if (spval[0] == "attr_top_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_toplam').style.display = "block";
+				showfin = 1;
 			}
 		}else{
 			if (spval[0] == "attr_right_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_rightlam').style.display = "block";
+				showfin = 1;
 			}else if (spval[0] == "attr_left_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_leftlam').style.display = "block";
+				showfin = 1;
 			}else if (spval[0] == "attr_top_lamination"){
 				document.getElementById(spval[0]).value = spval[1];
 				document.getElementById('show_toplam').style.display = "block";
+				showfin = 1;
 			}else{
 				document.getElementById(spval[0]).value = spval[1];
 			}
 		}
+	}
+
+	if (showfin == 1){
+		$('#finish_head').css("display", "block");
 	}
 }
 

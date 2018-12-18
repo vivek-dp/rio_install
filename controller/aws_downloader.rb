@@ -8,6 +8,8 @@ require 'aws-sdk'
 module RioAwsDownload
 	KEY_FILE_LOC ||= ENV['TEMP']+'\.aws_cache'
 	AWS_ASSETS_REGION ||= 'ap-south-1'
+	$filename_std = 'Rio_carcass_components_1.1.csv'
+	$filename_int = 'Rio_sliding_door_1.0.csv'
 	
 	def self.aws_credentials
 		key_contents 	= File.read(KEY_FILE_LOC)
@@ -86,7 +88,6 @@ module RioAwsDownload
 		target_path = temp_dir + "\\" + file_name
 		begin
 			resp 	= s3_client.get_object(bucket: bucket_name, key: file_path, response_target: target_path)
-			puts "File download success"
 			return target_path
 		rescue Aws::S3::Errors::NoSuchKey
 			puts "File Does not exist"
@@ -102,10 +103,8 @@ module RioAwsDownload
 		target_path = temp_dir + "\\" + file_name
 		begin
 			resp 	= s3_client.get_object(bucket: bucket_name, key: file_path, response_target: target_path)
-			puts "File download success"
 			return target_path
 		rescue Aws::S3::Errors::NoSuchKey
-			puts "File Does not exist"
 			return nil
 		end
 		return nil
@@ -115,10 +114,8 @@ module RioAwsDownload
 		s3_client	= get_client
 		begin
 			resp 	= s3_client.get_object(bucket: bucket_name, key: file_path, response_target: target_path)
-			puts "File download success"
 			return target_path
 		rescue Aws::S3::Errors::NoSuchKey
-			puts "File Does not exist"
 			return nil
 		end
 		return nil
@@ -126,13 +123,67 @@ module RioAwsDownload
 	
 	def self.download_component_list
 		s3_client	= get_client
-		target_path	= File.join(RIO_ROOT_PATH+'/cache/Rio_standard_components.csv')
+		target_path	= File.join(RIO_ROOT_PATH+'/cache/'+$filename_std)
 		bucket_name	= 'rio-sub-components'
-		file_path	= 'Rio_standard_components.csv'
 		begin
-			resp 	= s3_client.get_object(bucket: bucket_name, key: file_path, response_target: target_path)
-			puts "File download success"
+			resp 	= s3_client.get_object(bucket: bucket_name, key: $filename_std, response_target: target_path)
 			self.create_carcass_database
+			self.create_sliding_database
+			return target_path
+		rescue Aws::S3::Errors::NoSuchKey
+			return nil
+		end
+		return nil
+	end
+
+	def self.create_carcass_database
+		dbname = 'rio_std'
+		@table = 'rio_standards'
+		@db = SQLite3::Database.new(dbname)
+
+		db_file_path= File.join(RIO_ROOT_PATH+"/"+"cache/"+$filename_std)
+		if !File.exists?(db_file_path)
+						
+		end
+		csv_arr     = CSV.read(db_file_path)
+		fields      = csv_arr[0]
+		
+		#Delete table if already exists
+		sql_query   = 'DROP TABLE IF EXISTS '+@table+';'
+		@db.execute(sql_query);
+		
+		#Create fresh table
+		sql_query   = 'CREATE TABLE '+@table+' ('
+		fields.each { |field|
+			sql_query += field + ' TEXT,'
+		}
+		sql_query.chomp!(',');
+		sql_query += ');'
+		@db.execute(sql_query);
+		
+		#Add rows to database
+		multi_query = 'INSERT INTO '+@table+' ('+fields.join(',')+') VALUES '
+		(1..csv_arr.length-1).each { |index|
+			row_values = csv_arr[index].to_s
+			row_values.slice!(0);   row_values.chomp!(']')
+			if fields.length == csv_arr[index].length
+				multi_query   += '('+row_values+'),'
+			else
+				puts "Number of fields and columns not equal : #{row_values}"
+			end
+		}
+		multi_query = multi_query.chomp(',') + ';'
+		@db.execute(multi_query);
+		puts "Components are loaded."
+		self.download_sliding_list
+	end
+
+	def self.download_sliding_list
+		s3_client	= get_client
+		target_path	= File.join(RIO_ROOT_PATH+'/cache/'+$filename_int)
+		bucket_name	= 'rio-sub-components'
+		begin
+			resp 	= s3_client.get_object(bucket: bucket_name, key: $filename_int, response_target: target_path)
 			self.create_sliding_database
 			return target_path
 		rescue Aws::S3::Errors::NoSuchKey
@@ -142,89 +193,39 @@ module RioAwsDownload
 		return nil
 	end
 
-	def self.create_carcass_database
-		dbname = 'rio_std'
-		@table = 'rio_standards'
-		@db = SQLite3::Database.new( dbname )
-
-	  db_file_path= File.join(RIO_ROOT_PATH+"/"+"cache/Rio_standard_components.csv")
-	  if !File.exists?(db_file_path)
-
-	  end
-	  
-	  csv_arr     = CSV.read(db_file_path)
-	  fields      = csv_arr[0]
-	  
-	  #Delete table if already exists
-	  sql_query   = 'DROP TABLE IF EXISTS '+@table+';'
-	  @db.execute(sql_query);
-	  
-	  #Create fresh table
-	  sql_query   = 'CREATE TABLE '+@table+' ('
-	  fields.each { |field|
-	    puts field
-	      sql_query += field + ' TEXT,'
-	  }
-	  sql_query.chomp!(',');
-	  sql_query += ');'
-	  @db.execute(sql_query);
-	  
-	  
-	  #Add rows to database
-	  (1..csv_arr.length-1).each { |index|
-	      #puts index
-	      row_values = csv_arr[index].to_s
-	      row_values.slice!(0);   row_values.chomp!(']')
-	      #puts "row_values : #{row_values}"
-	      if fields.length == csv_arr[index].length
-	          sql_query   = 'INSERT INTO '+@table+' ('+fields.join(',')+') VALUES ('+row_values+');'
-	          @db.execute(sql_query);
-	      else
-	          puts "Number of fields and columns not equal : #{row_values}"
-	      end
-	  }
-	end
-
 	def self.create_sliding_database
 	  dbname = 'rio_std'
-	  @table = 'rio_sliding'
-	  @dbt = SQLite3::Database.new( dbname )
-	  db_file_path= File.join(RIO_ROOT_PATH+"/"+"cache/Rio_standard_components - SLIDING WARDROBE INTERNAL.csv")
-	  
-	  csv_arr     = CSV.read(db_file_path)
-	  # puts "--#{csv_arr}"
-	  sql_query   = 'DROP TABLE IF EXISTS '+@table+';'
-	  @dbt.execute(sql_query);
+		@table = 'rio_slidings'
+		@dbt = SQLite3::Database.new( dbname )
+		db_file_path= File.join(RIO_ROOT_PATH+"/"+"cache/"+$filename_int)
+		
+		csv_arr = CSV.read(db_file_path)
+		fields = csv_arr[0]
+		
+		#drop table
+		sql_query   = 'DROP TABLE IF EXISTS '+@table+';'
+		@dbt.execute(sql_query);
 
-	  sqlquery = 'CREATE TABLE IF NOT EXISTS '+@table+'(slide_type TEXT, category TEXT);'
-	  @dbt.execute(sqlquery)
+		#Create new table
+		sql_query = 'CREATE TABLE '+@table+' ('
+		fields.each { |field|
+			sql_query += field + ' TEXT,'
+		}
+		sql_query.chomp!(',');
+		sql_query += ');'
+		@dbt.execute(sql_query);
 
-	  (0..csv_arr.length-1).each{|ind|
-	    rowval = csv_arr[ind].to_s
-	    rowval.slice!(0);   rowval.chomp!(']')
-
-	    skip = 0
-	    if rowval.include?("2DOOR SLIDING")
-	      $type = 2
-	      skip = 1
-	    elsif rowval.include?("3 DOOR SLIDING")
-	      $type = 3
-	      skip = 1
-	    end
-	    sval = rowval.split(",")[0]
-	    sval = sval.split("_").last.gsub('"', '')
-	    
-	    if skip == 0
-	      val = rowval.split(",")
-	      spval = val[0].split("_")
-	      if !spval[1].nil?
-	        puts "#{sval}---#{spval[1].gsub("LHS", "")}"
-	        sqlquery = 'INSERT INTO '+@table+' VALUES('+sval+','+spval[1].gsub("LHS", "")+');'
-	        @dbt.execute(sqlquery)
-	      end
-
-	    end
-	  }
+		multival = 'INSERT INTO '+@table+' ('+fields.join(',')+') VALUES '
+		(1..csv_arr.length-1).each{|ind|
+			rowval = csv_arr[ind].to_s
+			rowval.slice!(0); rowval.chomp!(']')
+			if fields.length == csv_arr[ind].length
+				multival += '('+ rowval +'),'
+			end
+		}
+		multival = multival.chomp(',') + ';'
+		@dbt.execute(multival);
+		puts "Internals are loaded."
 	end
 
 end

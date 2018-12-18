@@ -112,6 +112,9 @@ function pager(pval){
 		}else if (pval == 4){
 			$('#page_content').load("load_html.html");
 			hideicon(4)
+		}else if (pval == 5){
+			$('#page_content').load("load_space.html");
+			hideicon(5)
 		}
 	}else{
 		toastr.info('Please fill the mandatory field!', 'Info')
@@ -127,29 +130,41 @@ function hideicon(val){
 		$('#p2').css("display", "none");
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
+		$('#p5').css("display", "none");
 	}else if (val == 1){
+		$('#p0').css("display", "none");
 		$('#p1').css("display", "block");
-		$('#p0').css("display", "none");
 		$('#p2').css("display", "none");
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
+		$('#p5').css("display", "none");
 	}else if (val == 2){
+		$('#p0').css("display", "none");
+		$('#p1').css("display", "none");
 		$('#p2').css("display", "block");
-		$('#p1').css("display", "none");
-		$('#p0').css("display", "none");
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
+		$('#p5').css("display", "none");
 	}else if (val == 3){
-		$('#p3').css("display", "block");
+		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
 		$('#p2').css("display", "none");
-		$('#p0').css("display", "none");
+		$('#p3').css("display", "block");
 		$('#p4').css("display", "none");
+		$('#p5').css("display", "none");
 	}else if (val == 4){
-		$('#p4').css("display", "block");
+		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
 		$('#p2').css("display", "none");
 		$('#p3').css("display", "none");
+		$('#p4').css("display", "block");
+		$('#p5').css("display", "none");
+	}else if (val == 5){
 		$('#p0').css("display", "none");
+		$('#p1').css("display", "none");
+		$('#p2').css("display", "none");
+		$('#p3').css("display", "none");
+		$('#p4').css("display", "none");
+		$('#p5').css("display", "block");
 	}
 }

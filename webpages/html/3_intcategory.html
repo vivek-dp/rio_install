@@ -4,98 +4,140 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/semantic.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script type="text/javascript" src="../js/toastr.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/toastr.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+	<script type="text/javascript" src="../js/load_add_comp.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script>
+		$(document).ready(function(){
+			window.location = 'skp:load_cat@'+ 3;
+		});
+
+		function passintval(inp){
+			for (var i = 0; i < inp.length; i++){
+				$('#showint_3_'+inp[i]).css("display", "block");
+			}
+		}
+		function selbtn(val){
+			window.location = 'skp:getintcat@'+ val;
+		}
+	</script>
+
+	<style>
+		.row {background-color: #1B1B1B; color: white; border-bottom: 1px solid grey;}
+		.blr {border-right: 1px solid grey; border-left: 1px solid grey;}
+		.brht {border-right: 1px solid grey;}
+		.wid {width: 20% !important;}
+		.wid1 {width: 19.5% !important;}
+		.widl {width: 20%; margin-left: 2em;}
+		.column {text-align: center; vertical-align: middle !important;}
+		img {height: 120px;}
+	</style>
 </head>
+
 <body>
 	<div class="ui container-fluid">
-		<div class="ui grid">
-			<div class="ui form" style="margin:20px;">
-				<table class="ui celled structured inverted table">
-					<thead>
-						<tr>
-							<th class="center aligned">Category</th>
-							<th class="center aligned">LHS (Left Hand Side)</th>
-							<th class="center aligned">Center</th>
-							<th class="center aligned">RHS (Right Hand Side)</th>
-						</tr>
-					</thead>
+		<div class="ui equal width center aligned padded grid">
+		  <div class="row">
+		    <div class="column">Category</div>
+		    <div class="column blr">LHS (Left Hand Side)</div>
+		    <div class="column brht">Center (LHS & RHS)</div>
+		    <div class="column brht">Right (Right Hand Side)</div>
+		    <div class="column">Action</div>
+		  </div>
 
-					<tbody>
-						<tr>
-							<td class="center aligned">1</td>
-							<td><img src="C:/RioSTD/cache/images/3_1LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_1LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_1RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">2</td>
-							<td><img src="C:/RioSTD/cache/images/3_2LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_2LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_2RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">3</td>
-							<td><img src="C:/RioSTD/cache/images/3_3LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_3LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_3RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">4</td>
-							<td><img src="C:/RioSTD/cache/images/3_4LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_4LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_4RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">5</td>
-							<td><img src="C:/RioSTD/cache/images/3_5LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_5LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_5RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">6</td>
-							<td><img src="C:/RioSTD/cache/images/3_6LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_6LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_6RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">7</td>
-							<td><img src="C:/RioSTD/cache/images/3_7.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_7.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_7.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">8</td>
-							<td><img src="C:/RioSTD/cache/images/3_8.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_8.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_8.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">9</td>
-							<td><img src="C:/RioSTD/cache/images/3_9LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_9LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_9RHS.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">10</td>
-							<td><img src="C:/RioSTD/cache/images/3_10.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_10.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_10.jpg" width="300" height="250"></td>
-						</tr>
-						<tr>
-							<td class="center aligned">11</td>
-							<td><img src="C:/RioSTD/cache/images/3_11LHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_11LHS_RHS.jpg" width="300" height="250"></td>
-							<td><img src="C:/RioSTD/cache/images/3_11RHS.jpg" width="300" height="250"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+		  <div class="row" style="display:none;" id="showint_3_1">
+		  	<div class="column wid1">1</div>
+		    <div class="column blr wid"><img src="../images/3INT_1LHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_1LHS_RHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_1LHS_800.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(1)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_2">
+		  	<div class="column wid1">2</div>
+		    <div class="column blr wid"><img src="../images/3INT_2LHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_2LHS_RHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_2RHS_800.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(2)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_3">
+		  	<div class="column wid1">3</div>
+		    <div class="column blr wid"><img src="../images/3INT_3LHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_3LHS_RHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_3RHS_800.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(3)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_4">
+		  	<div class="column wid1">4</div>
+		    <div class="column blr wid"><img src="../images/3INT_4LHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_4LHS_RHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_4RHS_800.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(4)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_5">
+		  	<div class="column wid1">5</div>
+		    <div class="column blr wid"><img src="../images/3INT_5LHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_5LHS_RHS_800.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_5RHS_800.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(5)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_6">
+		  	<div class="column wid1">6</div>
+		    <div class="column blr wid"><img src="../images/3INT_6LHS_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_6LHS_RHS_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_6RHS_600.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(6)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_7">
+		  	<div class="column wid1">7</div>
+		    <div class="column blr wid"><img src="../images/3INT_7_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_7_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_7_600.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(7)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_8">
+		  	<div class="column wid1">8</div>
+		    <div class="column blr wid"><img src="../images/3INT_8_700.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_8_700.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_8_700.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(8)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_9">
+		  	<div class="column wid1">9</div>
+		    <div class="column blr wid"><img src="../images/3INT_9LHS_750.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_9LHS_RHS_750.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_9RHS_750.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(9)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_10">
+		  	<div class="column wid1">10</div>
+		    <div class="column blr wid"><img src="../images/3INT_10_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_10_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_10_600.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(10)">Select</button></div>
+		  </div>
+
+		  <div class="row" style="display:none;" id="showint_3_11">
+		  	<div class="column wid1">11</div>
+		    <div class="column blr wid"><img src="../images/3INT_11LHS_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_11LHS_RHS_600.jpg"></div>
+		    <div class="column brht wid"><img src="../images/3INT_11RHS_600.jpg"></div>
+		    <div class="column widl"><button class="mini ui positive button" onclick="selbtn(11)">Select</button></div>
+		  </div>
 		</div>
 	</div>
 </body>

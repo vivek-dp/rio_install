@@ -52,6 +52,12 @@ module Decor_Standards
 			fintyp = @selection.get_attribute(@dict_name, 'attr_finish_type')
 			fintyp = "" if fintyp.nil?
 
+			shutfin = @selection.get_attribute(@dict_name, 'attr_shutter_finish')
+			shutfin = "" if shutfin.nil?
+
+			intfin = @selection.get_attribute(@dict_name, 'attr_internal_finish')
+			intfin = "" if intfin.nil?
+
 			# defcode = @selection.definition.name
 			defcode = @selection.definition.get_attribute(@dict_name, 'attr_product_code')
 
@@ -69,6 +75,9 @@ module Decor_Standards
 		  mainarr.push("attr_finish_type|"+fintyp)
 			mainarr.push("attr_product_code|"+defcode)
 			mainarr.push("attr_product_name|"+defname)
+			mainarr.push("attr_shutter_finish|"+shutfin)
+			mainarr.push("attr_internal_finish|"+intfin)
+
 			if single_laminate == 1
 		  	mainarr.push("attr_lamination_color_code|"+lamcode)
 		  end
@@ -83,7 +92,7 @@ module Decor_Standards
 		  if top_laminate == 1
 		  	mainarr.push("attr_top_lamination|"+lam_top)
 		  end
-
+		  
 			return mainarr
 		end
 	end
@@ -94,8 +103,6 @@ module Decor_Standards
 			@selection.set_attribute(@dict_name, k, v)
 		}
 		return 1
-		js_maincat = "passUpdateToJs(1)"
-	 	a.execute_script(js_maincat)
 	end
 
 	def self.uptdetail()
