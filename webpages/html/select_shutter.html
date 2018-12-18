@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+	<script type="text/javascript" src="../js/semantic.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+	<script type="text/javascript" src="../js/toastr.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/toastr.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+	<script type="text/javascript" src="../js/load_add_comp.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script>
+		$(document).ready(function(){
+			window.location = 'skp:load_shutimg@'+ 1;
+		});
+
+		function selShutter(val){
+			if (val == 1){
+				var sval = $('#alvalue').val();
+			}else if (val == 2){
+				var sval = $('#plvalue').val();
+			}
+			window.location = 'skp:select_shutter@'+ sval;
+		}
+	</script>
+
+	<style>
+		body {background-color: #1B1B1B; color: white;}
+		.column {text-align: center; padding: inherit;}
+		.bdr {border-right: 1px solid grey;border-bottom: 1px solid grey;}
+		.bbtm {border-bottom: 1px solid grey;}
+	</style>
+</head>
+<body>
+	<div class="ui container-fluid">
+		<div class="ui grid">
+			<div class="eight wide column bdr">
+				<div class="column bbtm"><div id="alname"></div></div>
+				<div class="column" id="alimage"></div>
+				<input type="hidden" id="alvalue" value="">
+				<div class="column"><button class="ui green button" onclick="selShutter(1)">Select</button></div>
+			</div>
+			<div class="eight wide column bbtm">
+				<div class="column bbtm"><div id="plname"></div></div>
+				<div class="column"><div id="plimage"></div></div>
+				<input type="hidden" id="plvalue" value="">
+				<div class="column"><button class="ui green button" onclick="selShutter(2)">Select</button></div>
+			</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
