@@ -45,6 +45,7 @@ module Decor_Standards
 		$door_type = selection.definition.get_attribute(:rio_atts, 'door-type')
 		$shutter_type = selection.definition.get_attribute(:rio_atts, 'shutter-type')
 		$internal_category = selection.definition.get_attribute(:rio_atts, 'internal-category')
+		$space_name = selection.definition.get_attribute(:rio_atts, 'space-name')
 	end
 
 	def self.set_window(inp_page, key, value)
@@ -90,14 +91,21 @@ module Decor_Standards
 			Sketchup.active_model.set_attribute(:rio_global, 'designer_name', params['designer_name'])
 			Sketchup.active_model.set_attribute(:rio_global, 'visualizer_name', params['visualizer_name'])
 
+			cliname = Sketchup.active_model.get_attribute(:rio_global, 'client_name')
+			proname = Sketchup.active_model.get_attribute(:rio_global, 'project_name')
+
+			jscli = "document.getElementById('cliname').innerHTML='#{cliname}'"
+			$rio_dialog.execute_script(jscli)
+			sleep 0.1
+			jspro = "document.getElementById('proname').innerHTML='#{proname}'"
+			$rio_dialog.execute_script(jspro)
+
 			jscpage = "changePager()"
 			$rio_dialog.execute_script(jscpage)
 		}
 
 		$rio_dialog.add_action_callback("getspacelist"){|a, b|
-			value = ["test", "test1", "test2", "test3", "test4"]
-			# value = []
-			getlist = self.add_option(value)
+			getlist = self.add_option(0, 0)
 			jsadd = "passSpaceList("+getlist.to_s+")"
 		 	$rio_dialog.execute_script(jsadd)
 		}
@@ -161,6 +169,7 @@ module Decor_Standards
 				UI.messagebox 'More than one component selected!', MB_OK
 			else
 				getval = self.get_attr_value()
+				puts "get---#{getval}"
 				js_maincat = "passValToJs("+getval.to_s+")"
 				$rio_dialog.execute_script(js_maincat)
 			end
@@ -184,9 +193,17 @@ module Decor_Standards
 			$rio_dialog.execute_script(js_exped)
 		}
 
-		$rio_dialog.add_action_callback("openfile"){|a, b|
-			puts b
-			#system('start %s' % (b))
+		$rio_dialog.add_action_callback("upt_client"){|a, b|
+			newarr = []
+			@views = ["left", "back", "right", "front"]
+			@views.each {|view|
+				comps 	= DP::get_visible_comps view
+				if !comps.empty? == true
+					newarr.push(view)
+				end
+			}
+			js_view = "passViews("+newarr.to_s+")"
+			$rio_dialog.execute_script(js_view)
 		}
 
 		$rio_dialog.add_action_callback("open_modal"){|a, b|
@@ -205,8 +222,7 @@ module Decor_Standards
 				type = 0
 			end
 			mainsp = []
-			value = ["test", "test1", "test2", "test3", "test4"]
-			splist = self.add_option(value)
+			splist = self.add_option($space_name, type)
 			mainsp.push(splist)
 			maincat = self.get_main_space(params);
 			mainsp.push(maincat)
@@ -230,6 +246,37 @@ module Decor_Standards
 			subcat.push(subsp)
 			js_sub = "passsubCat("+subcat.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_sub)
+		}
+
+		$rio_dialog.add_action_callback("select-carcass"){|a, b|
+			@spval = b.split(",")
+			@title = "Choose Carcass"
+			cardialog = UI::HtmlDialog.new({:dialog_title=>@title, :preferences_key=>"com.sample.plugin", :scrollable=>true, :resizable=>true, :style=>UI::HtmlDialog::STYLE_DIALOG})
+			html_path = File.join(WEBDIALOG_PATH, 'load_carcass.html')
+			cardialog.set_file(html_path)
+			cardialog.set_position(0, 150)
+			cardialog.show
+
+			cardialog.add_action_callback("load_carimg"){|d, v|
+				getcar = self.get_carcass_image(@spval)
+				jscar = "passCarImage("+getcar.to_s+")"
+				cardialog.execute_script(jscar)
+			}
+
+			cardialog.add_action_callback("load_detail"){|d, v|
+				valarr = []
+				cardialog.close
+				valarr.push(v)
+				jspas = "passCarVal("+valarr.to_s+")"
+				$rio_dialog.execute_script(jspas)
+			}
+		}
+
+		$rio_dialog.add_action_callback("update_car"){|a, b|
+			valarr = []
+			valarr.push($carcass_code)
+			jsval = "passCarVal("+valarr.to_s+")"
+			$rio_dialog.execute_script(jsval)
 		}
 
 		$rio_dialog.add_action_callback("load-code"){|a, b|
@@ -263,11 +310,10 @@ module Decor_Standards
 			end
 			get_int = self.get_internal_category(spinp)
 			newarr.push(get_int)
-			getskp = self.get_comp_image(spinp)
-			newarr.push(getskp)
 			getval = self.get_datas(spinp, type)
 			newarr.push(getval)
 
+			puts "newarr---#{newarr}"
 			js_data = "passDataVal("+newarr.to_s+", "+type.to_s+")"
 			$rio_dialog.execute_script(js_data)
 		}
@@ -375,6 +421,14 @@ module Decor_Standards
 
 		$rio_dialog.add_action_callback("updateglobal"){|a, b|
 			$edit_val = 0
+		}
+
+		$rio_dialog.add_action_callback("rotate-comp"){|a, b|
+			DP::zrotate
+		}
+
+		$rio_dialog.add_action_callback("choose-color"){|a, b|
+			CP::call_picker
 		}
 	end
 end

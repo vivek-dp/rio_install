@@ -1,5 +1,4 @@
 $(document).ready(function(){
-	window.location = 'skp:get_detail@'+1;
 	window.location = 'skp:uptdetail@'+1;
 
 	$('#startproject').on('click', function(){
@@ -27,9 +26,9 @@ $(document).ready(function(){
 	});
 });
 
-function changePager(){
+function changePager(val){
 	document.getElementById("load").style.display = "none";
-	document.getElementById('add_space').click();
+	document.getElementById('add_wall').click();
 }
 
 function enableskip(){

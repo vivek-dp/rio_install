@@ -1,6 +1,4 @@
 $(document).ready(function(){
-	window.location = 'skp:get_detail@'+1;
-	
 	$(".allownumeric").keypress(function (e) {
 		if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
       toastr.info("Numbers only allowed!", "Info");

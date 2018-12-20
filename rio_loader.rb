@@ -49,6 +49,7 @@ module Decor_Standards
 	Sketchup::require File.join(cont_path, 'home_file.rb')
 	Sketchup::require File.join(cont_path, 'export_html.rb')
 	Sketchup::require File.join(cont_path, 'dp_core.rb')
+	Sketchup::require File.join(cont_path, 'color_picker.rb')
 	
 	DP::create_layers
 end

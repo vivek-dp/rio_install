@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="../js/load_space.js"></script>
+	<style>
+		.cbtn{
+			background-image: linear-gradient(to bottom right, red, yellow) !important;
+			color: white !important;
+			font-family: 'Poppins', sans-serif !important;
+			font-weight: normal !important;
+		}
+		.btn{background-color: orangered !important; color: white !important;}
+	</style>
 	<script>
 		$(document).ready(function(){
 			window.location = 'skp:getspacelist@'+1;
+
+			$(".allownum").keypress(function (e) {
+				if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+		      toastr.info("Numbers only allowed!", "Info");
+		      return false;
+		    }
+		  });
+
+			$('#color_picker').on('click', function(){
+				window.location = 'skp:choose-color@'+1;
+			});
 		});
 		function passSpaceList(value){
 			if (value != ""){
@@ -28,7 +47,7 @@
 
 		<div class="column">
 			<div class="ui form">
-				<button class="mini ui pink button right floated" style="font-family: 'Poppins', sans-serif; font-weight: normal;">Add Space</button>
+				<button class="mini ui button right floated btn" style="font-family: 'Poppins', sans-serif; font-weight: normal;">Add Space</button>
 				<div class="field" id="show_spacelist" style="display: none;">
 					<div class="ui labeled input">
 						<div class="ui label">Space List:</div>
@@ -38,39 +57,35 @@
 
 				<div class="field" id="show_spaceheight" style="display: none;">
 					<div class="ui labeled input">
-						<div class="ui label">Height:</div>
-						<div class="ui input"><input type="text" id="space_height"></div>
+						<div class="ui label">Wall Height:</div>
+						<div class="ui input">
+							<input type="text" id="space_height" class="allownum">
+							<button class="mini ui button cbtn" id="color_picker">Select Wall Color</button>
+						</div>
 					</div>
 				</div>
 
 				<div class="field" id="show_doorheight" style="display: none;">
 					<div class="ui labeled input">
 						<div class="ui label">Door Height:</div>
-						<div class="ui input"><input type="text" id="door_height"></div>
+						<div class="ui input"><input type="text" id="door_height" class="allownum"></div>
 					</div>
 				</div>
 
 				<div class="field" id="show_winoff" style="display: none;">
 					<div class="ui labeled input">
 						<div class="ui label">Window Offset:</div>
-						<div class="ui input"><input type="text" id="window_offset"></div>
+						<div class="ui input"><input type="text" id="window_offset" class="allownum"></div>
 					</div>
 				</div>
 
 				<div class="field" id="show_winheight" style="display: none;">
 					<div class="ui labeled input">
 						<div class="ui label">Window Height:</div>
-						<div class="ui input"><input type="text" id="window_height"></div>
+						<div class="ui input"><input type="text" id="window_height" class="allownum"></div>
 					</div>
 				</div>
-
-				<div class="field" id="color_code" style="display: none;">
-					<div class="ui labeled input">
-						<div class="ui label">Color Picker:</div>
-						<div class="ui input"><input type="color" name="favcolor" value="#ff0000"></div>
-					</div>
-				</div>
-
+				
 				<div class="field" style="text-align: center;margin-top: 2em;">
 					<button class="ui disabled positive button" style="font-family: 'Poppins', sans-serif; font-weight: normal;" id="create_space">Create Space</button>
 				</div>

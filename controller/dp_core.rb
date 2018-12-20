@@ -182,6 +182,19 @@ module DP
 		end
 		return hit_face
 	end
+
+	def self.zrotate
+		comp = Sketchup.active_model.selection[0]
+		if !comp.nil?
+			point = comp.transformation.origin
+			vector = Geom::Vector3d.new(0,0,1)
+			angle = 90.degrees
+			transformation = Geom::Transformation.rotation(point, vector, angle)
+			comp.transform!(transformation)
+		else
+			UI.messagebox 'Component not selected!', MB_OK
+		end
+	end
 	
 	def self.get_points comp, view
 		hit_pts = []

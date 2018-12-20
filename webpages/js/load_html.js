@@ -1,11 +1,17 @@
 $(document).ready(function(){
-	ids = ["show_outline", "show_dimen", "show_laminate", "top_view", "front_view", "back_view", "left_view", "right_view"]
-	for (var i = 0; i < ids.length; i++){
-		document.getElementById(ids[i]).checked = true;
-	}
-
 	window.location = 'skp:upt_client@'+1;
+
+	ids = ["show_outline", "show_dimen", "show_laminate", "top_view"]
+	for (var i = 0; i < ids.length; i++){
+		$('#'+ids[i]).prop('checked', true);
+	}
 });
+
+function passViews(val){
+	for (var j = 0; j < val.length; j++){
+		$('#'+val[j]+'_view').prop('checked', true)
+	}
+}
 
 function expSubmit(){
 	json = {};
@@ -32,5 +38,5 @@ function expSubmit(){
 
 	var str = JSON.stringify(json);
 	document.getElementById("load").style.display = "block";
-	setTimeout(function() {window.location = 'skp:exporthtml@'+str;}, 1000);	
+	setTimeout(function() {window.location = 'skp:exporthtml@'+str;}, 500);	
 }

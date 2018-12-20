@@ -125,10 +125,10 @@ module RioAwsDownload
 		s3_client	= get_client
 		target_path	= File.join(RIO_ROOT_PATH+'/cache/'+$filename_std)
 		bucket_name	= 'rio-sub-components'
+
 		begin
 			resp 	= s3_client.get_object(bucket: bucket_name, key: $filename_std, response_target: target_path)
 			self.create_carcass_database
-			self.create_sliding_database
 			return target_path
 		rescue Aws::S3::Errors::NoSuchKey
 			return nil

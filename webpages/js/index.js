@@ -115,6 +115,9 @@ function pager(pval){
 		}else if (pval == 5){
 			$('#page_content').load("load_space.html");
 			hideicon(5)
+		}else if (pval == 6){
+			$('#page_content').load("load_utility.html");
+			hideicon(6)
 		}
 	}else{
 		toastr.info('Please fill the mandatory field!', 'Info')
@@ -131,6 +134,7 @@ function hideicon(val){
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
 		$('#p5').css("display", "none");
+		$('#p6').css("display", "none");
 	}else if (val == 1){
 		$('#p0').css("display", "none");
 		$('#p1').css("display", "block");
@@ -138,6 +142,7 @@ function hideicon(val){
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
 		$('#p5').css("display", "none");
+		$('#p6').css("display", "none");
 	}else if (val == 2){
 		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
@@ -145,6 +150,7 @@ function hideicon(val){
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
 		$('#p5').css("display", "none");
+		$('#p6').css("display", "none");
 	}else if (val == 3){
 		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
@@ -152,6 +158,7 @@ function hideicon(val){
 		$('#p3').css("display", "block");
 		$('#p4').css("display", "none");
 		$('#p5').css("display", "none");
+		$('#p6').css("display", "none");
 	}else if (val == 4){
 		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
@@ -159,6 +166,7 @@ function hideicon(val){
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "block");
 		$('#p5').css("display", "none");
+		$('#p6').css("display", "none");
 	}else if (val == 5){
 		$('#p0').css("display", "none");
 		$('#p1').css("display", "none");
@@ -166,5 +174,14 @@ function hideicon(val){
 		$('#p3').css("display", "none");
 		$('#p4').css("display", "none");
 		$('#p5').css("display", "block");
+		$('#p6').css("display", "none");
+	}else if (val == 6){
+		$('#p0').css("display", "none");
+		$('#p1').css("display", "none");
+		$('#p2').css("display", "none");
+		$('#p3').css("display", "none");
+		$('#p4').css("display", "none");
+		$('#p5').css("display", "none");
+		$('#p6').css("display", "block");
 	}
 }

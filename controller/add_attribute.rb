@@ -18,29 +18,23 @@ module Decor_Standards
 			@dict_name = 'carcase_spec'
 			rawmat = @selection.get_attribute(@dict_name, 'attr_raw_material')
 			rawmat = "" if rawmat.nil?
+			
+			if @get_vsides[0] == true
+				lam_left = @selection.get_attribute(@dict_name, 'attr_left_lamination')
+				lam_left = "" if lam_left.nil?
+				left_laminate = 1
+			end
 
-			if @get_vsides[0] == false && @get_vsides[1] == false && @get_vsides[2] == false
-				lamcode = @selection.get_attribute(@dict_name, 'attr_lamination_color_code')
-				lamcode = "" if lamcode.nil?
-				single_laminate = 1
-			else
-				if @get_vsides[0] == true
-					lam_left = @selection.get_attribute(@dict_name, 'attr_left_lamination')
-					lam_left = "" if lam_left.nil?
-					left_laminate = 1
-				end
+			if @get_vsides[1] == true
+				lam_right = @selection.get_attribute(@dict_name, 'attr_right_lamination')
+				lam_right = "" if lam_right.nil?
+				right_laminate = 1
+			end
 
-				if @get_vsides[1] == true
-					lam_right = @selection.get_attribute(@dict_name, 'attr_right_lamination')
-					lam_right = "" if lam_right.nil?
-					right_laminate = 1
-				end
-
-				if @get_vsides[2] == true
-					lam_top = @selection.get_attribute(@dict_name, 'attr_top_lamination')
-					lam_top = "" if lam_top.nil?
-					top_laminate = 1
-				end
+			if @get_vsides[2] == true
+				lam_top = @selection.get_attribute(@dict_name, 'attr_top_lamination')
+				lam_top = "" if lam_top.nil?
+				top_laminate = 1
 			end
 
 			hand = @selection.get_attribute(@dict_name, 'attr_handles_type')
@@ -76,11 +70,10 @@ module Decor_Standards
 			mainarr.push("attr_product_code|"+defcode)
 			mainarr.push("attr_product_name|"+defname)
 			mainarr.push("attr_shutter_finish|"+shutfin)
-			mainarr.push("attr_internal_finish|"+intfin)
+			if defname.include?("Sliding") || defname.include?("sliding")
+				mainarr.push("attr_internal_finish|"+intfin)
+			end
 
-			if single_laminate == 1
-		  	mainarr.push("attr_lamination_color_code|"+lamcode)
-		  end
 		  if left_laminate == 1
 		  	mainarr.push("attr_left_lamination|"+lam_left)
 		  end

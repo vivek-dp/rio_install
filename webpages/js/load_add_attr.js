@@ -13,41 +13,31 @@ function passValToJs(val){
 	for(var i = 0; i < val.length; i++){
 		spval = val[i].split("|")
 		$ids.push(spval[0])
-		if (!spval[1] == true){
-			if (spval[0] == "attr_right_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_rightlam').style.display = "block";
-				showfin = 1;
-			}else if (spval[0] == "attr_left_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_leftlam').style.display = "block";
-				showfin = 1;
-			}else if (spval[0] == "attr_top_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_toplam').style.display = "block";
-				showfin = 1;
-			}
-		}else{
-			if (spval[0] == "attr_right_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_rightlam').style.display = "block";
-				showfin = 1;
-			}else if (spval[0] == "attr_left_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_leftlam').style.display = "block";
-				showfin = 1;
-			}else if (spval[0] == "attr_top_lamination"){
-				document.getElementById(spval[0]).value = spval[1];
-				document.getElementById('show_toplam').style.display = "block";
-				showfin = 1;
-			}else{
-				document.getElementById(spval[0]).value = spval[1];
-			}
+		if (spval[0].includes("left") == true){
+			$('#show_leftlam').css('display', 'block');
+		}else if (spval[0].includes("right") == true){
+			$('#show_rightlam').css('display', 'block');
+		}else if (spval[0].includes("top") == true){
+			$('#show_toplam').css('display', 'block');
+		}
+		$('#'+spval[0]).val(spval[1]);
+		if (spval[0] == "attr_finish_type" && (spval[1] != 0 || spval[1] != "")){
+			$('#finish_head').css('display', 'block');
 		}
 	}
 
-	if (showfin == 1){
-		$('#finish_head').css("display", "block");
+	if ($('#attr_product_name').val().includes("Sliding") || $('#attr_product_name').val().includes("sliding")){
+		$('#show_int').css('display', 'block');
+	}else{
+		$('#show_int').css('display', 'none');
+	}
+}
+
+function changeFinish(val){
+	if (val != 0){
+		$('#finish_head').css('display', 'block');
+	}else{
+		$('#finish_head').css('display', 'none');
 	}
 }
 
@@ -89,13 +79,13 @@ function uptvalue(){
 		}
 	}
 	var str = JSON.stringify(json);
-	document.getElementById("load").style.display = "block";
-	setTimeout(function() {window.location = 'skp:upd_attribute@'+ str;}, 1000);
+	$('#load').css('display', 'block');
+	setTimeout(function() {window.location = 'skp:upd_attribute@'+ str;}, 500);
 	// window.location = 'skp:upd_attribute@'+ str;
 }
 
 function passUpdateToJs(inp){
-	document.getElementById("load").style.display = "none";
+	$('#load').css('display', 'none');
 	toastr.success("Attributes are updated successfully!", "Success")
 	// setTimeout(function() {dlgClose()}, 5000);
 }

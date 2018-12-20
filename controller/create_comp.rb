@@ -83,6 +83,19 @@ module Decor_Standards
 		return local_carcass_path
 	end
 
+	def self.get_carcass_image(input)
+		getimg = @db.execute("select distinct carcass_code, category from #{@table} where space='#{input[0]}' and category='#{input[1]}';" )
+		cararr = []
+		for i in getimg
+			carcass_image = i[0] + '.jpg'
+			aws_carcass_path = File.join('carcass',input[0],carcass_image)
+			local_carcass_path = File.join(RIO_ROOT_PATH,'cache',carcass_image)
+			RioAwsDownload::download_file @bucket_name, aws_carcass_path, local_carcass_path
+			cararr.push(i[0]+"|"+i[1]+"|"+local_carcass_path)
+		end
+		return cararr
+	end
+
 	def self.get_shutter_image(input)
 		getimg = @db.execute("select shutter_code from #{@table} where space='#{input[0]}' and category='#{input[1]}' and carcass_code='#{input[2]}';")
 		inp = getimg[0][0].split("/")
@@ -197,7 +210,11 @@ module Decor_Standards
 		valhash = []
 		getdat = @db.execute("select shutter_code, type, solid, glass, alu, ply, shutter_origin from #{@table} where space='#{inp[0]}' and category='#{inp[1]}' and carcass_code='#{inp[2]}';")
 		if type == 1
-			valhash.push("shutter_code|"+$shutter_code)
+			if !$shutter_code.nil?
+				valhash.push("shutter_code|"+$shutter_code)
+			else
+				valhash.push("shutter_code|"+"No")
+			end
 		else
 			valhash.push("shutter_code|"+getdat[0][0])
 		end

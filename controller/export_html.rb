@@ -15,12 +15,21 @@ module Decor_Standards
 		# puts "draw------------",input
 	end
 
-	def self.add_option(input)
+	def self.add_option(input, type)
+		values = ["test", "test1", "test2", "test3", "test4"]
 		arrval = []
-		if input.count != 0
+		if values.count != 0
 			mainspace = ""
-			input.each {|val|
-				mainspace += '<option value="'+val+'">'+val+'</option>'
+			values.each {|val|
+				if type == 1
+					if val == input
+						mainspace += '<option value="'+val+'" selected="selected">'+val+'</option>'
+					else
+						mainspace += '<option value="'+val+'">'+val+'</option>'
+					end
+				else
+					mainspace += '<option value="'+val+'">'+val+'</option>'
+				end
 			}
 			mainspace1 = '<select class="ui dropdown" id="space_list" onchange="changeSpaceList(this.value)"><option value="0">Select...</option>'+mainspace+'</select>'
 			arrval.push(mainspace1)
@@ -31,7 +40,7 @@ module Decor_Standards
 	def self.get_space_detail(input)
 		json = {}
 		json['door'] = false
-		json['window'] = false
+		json['window'] = true
 
 		return json
 	end
@@ -88,8 +97,9 @@ module Decor_Standards
 	end
 
 	def self.get_homeimg(inp)
-		call_image = WorkingDrawing::get_working_image(inp)
-		return call_image[1]
+		# call_image = WorkingDrawing::get_working_image(inp)
+		call_image = 'D:/Decorpot_Extension/workspace/cache/'+inp+'.jpg'
+		return call_image
 	end
 
 	def self.export_html(input)
@@ -98,8 +108,7 @@ module Decor_Standards
 		elevation_image = File.join(WEBDIALOG_PATH,"../images/elevation.png")
 		clientid = clientid.empty? ? 'N/A' : clientid
 		@views = input
-
-		@topimg = self.get_homeimg('top')
+		@topviews = ["top", "top_section1", "top_section2", "top_section3"]
 
 		html = '<!DOCTYPE html>
 							<html lang="en">
@@ -125,9 +134,16 @@ module Decor_Standards
 								</style>
 							</head>
 
-							<body>'
-		html +='<div class="container-fluid">
-									<section style="border-style: double;">
+							<body>
+								<div class="container-fluid">'
+									@topviews.each{|tv|
+										if tv == "top"
+											pname = "floor plan"
+										else
+											pname = tv.gsub("_", " ")
+										end
+										@topimg = self.get_homeimg(tv)
+		html +=	'<section style="border-style: double;">
 										<div style="padding: 5px;">
 											<table class="table table-bordered">
 												<tbody>
@@ -152,13 +168,14 @@ module Decor_Standards
 																<div>Component ID:<br><span style="color:#7A003D !important; vertical-align:super;">______</span></div>
 															</div>
 														</td>
-														<td width="80%" style="padding: 1px;"><div style="text-align:center;"><h3>Floor Plan</h3></div><div class="pull-right"><img src="'+@topimg+'" width="820" height="620"><img class="imgB1" src="'+elevation_image+'" width="120" height="120"></div></td>
+														<td width="80%" style="padding: 1px;"><div style="text-align:center;"><h3>'+pname.capitalize+'</h3></div><div class="pull-right"><img src="'+@topimg+'" width="820" height="620"><img class="imgB1" src="'+elevation_image+'" width="120" height="120"></div></td>
 													</tr>
 												</tbody>
 											</table>
 										</div>
-									</section>
-								</div>
+									</section>'
+									}						
+		html +='</div>
 								<div class="page-break"></div>
 								<div class="container-fluid">'
 									@views.each{|vi|
@@ -176,12 +193,10 @@ module Decor_Standards
 															<div class="vname">Elevation&nbsp;'+elevate[vi].capitalize+'</div>
 														</div>
 														<div class="col-lg-12 btm-border">
-															<label>Client Name:</label>
-															<div class="cliname">'+clientname+'</div>
+															<div class="cliname"><b>Client Name: </b>'+clientname+'</div>
 														</div>
 														<div class="col-lg-12 btm-border">
-															<label>Client ID:</label>
-															<div class="cliname">'+clientid+'</div>
+															<div class="cliname"><b>Client ID: </b>'+clientid+'</div>
 														</div>
 														<div class="col-lg-12 btm-border">
 															<div class="cliname"><b>Room Name:</b> Kitchen</div>
