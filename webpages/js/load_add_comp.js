@@ -197,6 +197,7 @@ function createcomp(val){
 
 	var str = JSON.stringify(json);
 	$('#load').css("display", "block");
+	if (val == 1){$('#uptcomp').addClass("disabled");}
 	setTimeout(function() {window.location = 'skp:send_compval@'+ str;}, 500);
 }
 

@@ -227,8 +227,8 @@ module Decor_Standards
 															<th class="chead">Product Name</th>
 															<th class="chead">Raw Material</th>
 															<th class="chead">Top Laminate</th>
-															<th class="chead">Left Laminate</th>
 															<th class="chead">Right Laminate</th>
+															<th class="chead">Left Laminate</th>
 															<th class="chead">Handles</th>
 															<th class="chead">Soft Close</th>
 															<th class="chead">Finish Type</th>
