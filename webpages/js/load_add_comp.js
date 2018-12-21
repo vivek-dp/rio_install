@@ -171,6 +171,7 @@ function createcomp(val){
 
 	if ($('#shut_code').val() == "" && $('#shut_code').val() != "No"){
 		toastr.error('Please select a shutter to create!', 'Error');
+		return false
 	}
 	
 	if (val == 0){json['edit'] = 0}else if(val == 1){json['edit'] = 1}

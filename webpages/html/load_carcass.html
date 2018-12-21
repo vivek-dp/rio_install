@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+	<script type="text/javascript" src="../js/semantic.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+
+	<script>
+		$(document).ready(function(){
+			window.location = 'skp:load_carimg@'+ 1;
+		});
+
+		function passCarImage(input){
+			var cardetail = "";
+			for (var i = 0; i < input.length; i++){
+				var id = i + 1;
+				var spval = input[i].split("|")
+				cname = spval[1] + '</br>' + spval[0]
+				$('#name_'+id).html(cname)
+				$('#img_'+id).html('<img src="'+spval[2]+'" width="150" height="150">')
+				$('#btn_'+id).html('<button class="mini ui positive button" value="'+spval[0]+'" onclick="selCarcass(this.value)">Select</button>')
+				$('#carcass_'+id).css("display", "block");
+			}
+		}
+
+		function selCarcass(val){
+			window.location = 'skp:load_detail@' + val;
+		}
+	</script>
+	<style>
+		body {background-color: #1b1b1b; color: white;}
+		.ui.grid{margin: 0px;}
+		.ui.grid>.row>.column {text-align: center; padding: inherit; border: 1px solid grey;padding-left: 0px; padding-right: 0px;}
+		.ui.grid>.row {padding-bottom: 5px !important;}
+		.carimage {padding-top: inherit;}
+		.carname {border-bottom: 1px solid grey;overflow-wrap: break-word;margin-top: -10px;}
+		.mini {font-family: 'Poppins', sans-serif !important; font-weight: normal !important;}
+	</style>
+</head>
+<body>
+	<div class="ui container-fluid">
+		<div class="ui grid">
+			<div class="three column row">
+				<div class="column" id="carcass_1" style="display: none;">
+					<div class="carname" id="name_1"></div>
+					<div class="carimage" id="img_1"></div>
+					<div class="carbtn" id="btn_1"></div>					
+				</div>
+				<div class="column" id="carcass_2" style="display: none;">
+					<div class="carname" id="name_2"></div>
+					<div class="carimage" id="img_2"></div>
+					<div class="carbtn" id="btn_2"></div>
+				</div>
+				<div class="column" id="carcass_3" style="display: none;">
+					<div class="carname" id="name_3"></div>
+					<div class="carimage" id="img_3"></div>
+					<div class="carbtn" id="btn_3"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_4" style="display: none;">
+					<div class="carname" id="name_4"></div>
+					<div class="carimage" id="img_4"></div>
+					<div class="carbtn" id="btn_4"></div>					
+				</div>
+				<div class="column" id="carcass_5" style="display: none;">
+					<div class="carname" id="name_5"></div>
+					<div class="carimage" id="img_5"></div>
+					<div class="carbtn" id="btn_5"></div>
+				</div>
+				<div class="column" id="carcass_6" style="display: none;">
+					<div class="carname" id="name_6"></div>
+					<div class="carimage" id="img_6"></div>
+					<div class="carbtn" id="btn_6"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_7" style="display: none;">
+					<div class="carname" id="name_7"></div>
+					<div class="carimage" id="img_7"></div>
+					<div class="carbtn" id="btn_7"></div>					
+				</div>
+				<div class="column" id="carcass_8" style="display: none;">
+					<div class="carname" id="name_8"></div>
+					<div class="carimage" id="img_8"></div>
+					<div class="carbtn" id="btn_8"></div>
+				</div>
+				<div class="column" id="carcass_9" style="display: none;">
+					<div class="carname" id="name_9"></div>
+					<div class="carimage" id="img_9"></div>
+					<div class="carbtn" id="btn_9"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_10" style="display: none;">
+					<div class="carname" id="name_10"></div>
+					<div class="carimage" id="img_10"></div>
+					<div class="carbtn" id="btn_10"></div>					
+				</div>
+				<div class="column" id="carcass_11" style="display: none;">
+					<div class="carname" id="name_11"></div>
+					<div class="carimage" id="img_11"></div>
+					<div class="carbtn" id="btn_11"></div>
+				</div>
+				<div class="column" id="carcass_12" style="display: none;">
+					<div class="carname" id="name_12"></div>
+					<div class="carimage" id="img_12"></div>
+					<div class="carbtn" id="btn_12"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_13" style="display: none;">
+					<div class="carname" id="name_13"></div>
+					<div class="carimage" id="img_13"></div>
+					<div class="carbtn" id="btn_13"></div>					
+				</div>
+				<div class="column" id="carcass_14" style="display: none;">
+					<div class="carname" id="name_14"></div>
+					<div class="carimage" id="img_14"></div>
+					<div class="carbtn" id="btn_14"></div>
+				</div>
+				<div class="column" id="carcass_15" style="display: none;">
+					<div class="carname" id="name_15"></div>
+					<div class="carimage" id="img_15"></div>
+					<div class="carbtn" id="btn_15"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_16" style="display: none;">
+					<div class="carname" id="name_16"></div>
+					<div class="carimage" id="img_16"></div>
+					<div class="carbtn" id="btn_16"></div>					
+				</div>
+				<div class="column" id="carcass_17" style="display: none;">
+					<div class="carname" id="name_17"></div>
+					<div class="carimage" id="img_17"></div>
+					<div class="carbtn" id="btn_17"></div>
+				</div>
+				<div class="column" id="carcass_19" style="display: none;">
+					<div class="carname" id="name_19"></div>
+					<div class="carimage" id="img_19"></div>
+					<div class="carbtn" id="btn_19"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_19" style="display: none;">
+					<div class="carname" id="name_19"></div>
+					<div class="carimage" id="img_19"></div>
+					<div class="carbtn" id="btn_19"></div>					
+				</div>
+				<div class="column" id="carcass_20" style="display: none;">
+					<div class="carname" id="name_20"></div>
+					<div class="carimage" id="img_20"></div>
+					<div class="carbtn" id="btn_20"></div>
+				</div>
+				<div class="column" id="carcass_21" style="display: none;">
+					<div class="carname" id="name_21"></div>
+					<div class="carimage" id="img_21"></div>
+					<div class="carbtn" id="btn_21"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_22" style="display: none;">
+					<div class="carname" id="name_22"></div>
+					<div class="carimage" id="img_22"></div>
+					<div class="carbtn" id="btn_22"></div>					
+				</div>
+				<div class="column" id="carcass_23" style="display: none;">
+					<div class="carname" id="name_23"></div>
+					<div class="carimage" id="img_23"></div>
+					<div class="carbtn" id="btn_23"></div>
+				</div>
+				<div class="column" id="carcass_24" style="display: none;">
+					<div class="carname" id="name_24"></div>
+					<div class="carimage" id="img_24"></div>
+					<div class="carbtn" id="btn_24"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_25" style="display: none;">
+					<div class="carname" id="name_25"></div>
+					<div class="carimage" id="img_25"></div>
+					<div class="carbtn" id="btn_25"></div>					
+				</div>
+				<div class="column" id="carcass_26" style="display: none;">
+					<div class="carname" id="name_26"></div>
+					<div class="carimage" id="img_26"></div>
+					<div class="carbtn" id="btn_26"></div>
+				</div>
+				<div class="column" id="carcass_27" style="display: none;">
+					<div class="carname" id="name_27"></div>
+					<div class="carimage" id="img_27"></div>
+					<div class="carbtn" id="btn_27"></div>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column" id="carcass_28" style="display: none;">
+					<div class="carname" id="name_28"></div>
+					<div class="carimage" id="img_28"></div>
+					<div class="carbtn" id="btn_28"></div>					
+				</div>
+				<div class="column" id="carcass_29" style="display: none;">
+					<div class="carname" id="name_29"></div>
+					<div class="carimage" id="img_29"></div>
+					<div class="carbtn" id="btn_29"></div>
+				</div>
+				<div class="column" id="carcass_30" style="display: none;">
+					<div class="carname" id="name_30"></div>
+					<div class="carimage" id="img_30"></div>
+					<div class="carbtn" id="btn_30"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

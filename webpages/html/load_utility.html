@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		p {font-weight: normal;margin-top: 1em;}
+		button {font-family: 'Poppins', sans-serif !important; font-weight: normal !important;}
+		.clmn{text-align: center;border:1px solid grey;padding: 25px 0px 25px 0px;}
+	</style>
+
+	<script>
+		$(document).ready(function(){
+			$('#btn-rotate').on('click', function(){
+				window.location = 'skp:rotate-comp@'+1;
+			});
+			$('#btn-select').on('click', function(){
+				alert("Select")
+				// window.location = 'skp:rotate-comp@'+1;
+			});
+			$('#btn-color').on('click', function(){
+				window.location = 'skp:choose-color@'+1;
+			});
+			$('#btn-4').on('click', function(){
+				alert("4")
+				// window.location = 'skp:rotate-comp@'+1;
+			});
+			$('#btn-5').on('click', function(){
+				alert("5")
+				// window.location = 'skp:rotate-comp@'+1;
+			});
+			$('#btn-6').on('click', function(){
+				alert("6")
+				// window.location = 'skp:rotate-comp@'+1;
+			});
+		});
+	</script>
+</head>
+<body>
+	<div class="ui equal width form right-pad">
+		<div class="ui grid" style="margin: auto;">
+			<div class="three column row">
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-rotate">Rotate</button>
+					<p>Rotate component along Z axis.</p>
+				</div>
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-select">Select</button>
+					<p>Select all components.</p>
+				</div>
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-color">Color Picker</button>
+					<p>Test</p>
+				</div>
+			</div>
+
+			<div class="three column row">
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-4">Test</button>
+					<p>Test</p>
+				</div>
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-5">Test</button>
+					<p>Test</p>
+				</div>
+				<div class="column clmn">
+					<button class="mini ui teal button" id="btn-6">Test</button>
+					<p>Test</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

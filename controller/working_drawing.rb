@@ -12,8 +12,13 @@ require_relative "dp_core.rb"
 module WorkingDrawing
 	include DP
 	
-	@@drawing_image_offset = 500
-    
+	@@drawing_image_offset 	= 500
+	@@rio_component_count 	= 0
+	
+	def self.reset_component_count
+		@@rio_component_count = 0
+	end
+
     def self.initialize
         DP::create_layers
         @add_menu = false
@@ -162,7 +167,7 @@ module WorkingDrawing
 			end
 		}
 		rows = []
-
+		# puts "comp_h : #{comp_h} #{Time.now}"
         corners.each{|id| comp_h[id][:type]=:corner}
 		corners.each{|cor|
 			adjs = comp_h[cor][:adj]
@@ -172,7 +177,9 @@ module WorkingDrawing
 				curr = adj_comp
 				#comp_h[cor][:adj].delete curr
 				comp_h[curr][:adj].delete cor
+				puts "comp_h[curr] : #{comp_h[curr]}"
 				while comp_h[curr][:type] == :double
+					break if comp_h[curr][:adj].nil?
 					row << curr
 					adj_next = comp_h[curr][:adj][0]
 					comp_h[adj_next][:adj].delete curr
@@ -297,33 +304,33 @@ module WorkingDrawing
             end	
 			#lam_code = get_lamination comp
 			#midpoint = comp.bounds.
-			if lamination_pts && !lamination_pts.empty?
-				['left_lamination', 'right_lamination', 'top_lamination'].each {|lam_value|
-					lam_code = get_lamination comp, lam_value
-					case rotz
-					when 0
-						if lam_value.start_with?('left')
-							midpoint = lamination_pts[:left]
-							lvector = Geom::Vector3d.new(10, 0, 0)
-						elsif lam_value.start_with?('right')
-							midpoint = lamination_pts[:right]
-							lvector = Geom::Vector3d.new(-10, 0, 0)
-						else
-							midpoint = lamination_pts[:top]
-							lvector = Geom::Vector3d.new(0,10,0)
-						end
-					when 90
-					when 180, -180
-					when -90
-					end
-					#puts "midpoint : #{midpoint}  : #{lam_code}  : #{lvector}" if lam_code && !lam_code.empty?
-					text = Sketchup.active_model.entities.add_text lam_code, mid_point, lvector if lam_code && !lam_code.empty?
-					if text
-						text.layer = 'DP_lamination' 
-						text.material.color = 'green'
-					end
-				}
-			end
+			# if lamination_pts && !lamination_pts.empty?
+			# 	['left_lamination', 'right_lamination', 'top_lamination'].each {|lam_value|
+			# 		lam_code = get_lamination comp, lam_value
+			# 		case rotz
+			# 		when 0
+			# 			if lam_value.start_with?('left')
+			# 				midpoint = lamination_pts[:left]
+			# 				lvector = Geom::Vector3d.new(10, 0, 0)
+			# 			elsif lam_value.start_with?('right')
+			# 				midpoint = lamination_pts[:right]
+			# 				lvector = Geom::Vector3d.new(-10, 0, 0)
+			# 			else
+			# 				midpoint = lamination_pts[:top]
+			# 				lvector = Geom::Vector3d.new(0,10,0)
+			# 			end
+			# 		when 90
+			# 		when 180, -180
+			# 		when -90
+			# 		end
+			# 		#puts "midpoint : #{midpoint}  : #{lam_code}  : #{lvector}" if lam_code && !lam_code.empty?
+			# 		text = Sketchup.active_model.entities.add_text lam_code, mid_point, lvector if lam_code && !lam_code.empty?
+			# 		if text
+			# 			text.layer = 'DP_lamination' 
+			# 			text.material.color = 'green'
+			# 		end
+			# 	}
+			# end
             
         when 'left'
 			if show_dimension
@@ -473,11 +480,13 @@ module WorkingDrawing
 		}
 	end
 	
-    def self.outline_drawing view #comp_h not needed
-		if view == 'top'
-			comps 	= DP::get_top_visible_comps 
-		else
-			comps 	= DP::get_visible_comps view
+	def self.outline_drawing view, comps=[] #comp_h not needed
+		if comps.empty?
+			if view == 'top'
+				comps 	= DP::get_top_visible_comps 
+			else
+				comps 	= DP::get_visible_comps view
+			end
 		end
 		offset = @@drawing_image_offset
 
@@ -490,9 +499,10 @@ module WorkingDrawing
 		count = 1
 		
 		
-    comp_h.keys.each{|cid|
+    	comp_h.keys.each{|cid|
 			comp = DP::get_comp_pid cid
-			comp_name = "C#"+count.to_s
+			@@rio_component_count += 1
+			comp_name = "C#"+@@rio_component_count.to_s
 			view_comps[comp_name] = comp
             next if comp.nil?
             pts = get_outline_pts comp, view, offset
@@ -508,8 +518,10 @@ module WorkingDrawing
 			#point.z += 1000.mm
 			# puts "view : #{}"
 			Sketchup.active_model.active_layer= Sketchup.active_model.layers['DP_dimension_'+view]
-			text 	= entities.add_text comp_name, point
-			text.material.color = '7A003D'
+			if view != 'top'
+				text 	= entities.add_text comp_name, point
+				text.material.color = '7A003D'
+			end
 			count 	+=1
 			
 			rotz = comp.transformation.rotz
@@ -536,19 +548,29 @@ module WorkingDrawing
 		}
 		#puts comp_h
 		add_dimensions comp_h, view
+		puts "view.......#{view}"
+		background_ent = view
+		background_ent = 'floor' if view == 'top'
+		floor 			= DP.ents.select{|x| x.get_attribute(:rio_atts, 'position')==background_ent}
+		background_face = floor[0].entities.select{|temp| temp.is_a?(Sketchup::Face)}
+		background_face[0].edges.each{|edge| edge.layer = 'DP_outline_'+view}
+		face = Sketchup.active_model.entities.add_face(background_face[0].vertices) 
+		puts "face : #{view} :  #{floor} : #{face}"
+		puts "--------------------------------------"
+		Sketchup.active_model.entities.erase_entities face
 		view_comps
 	end
 	
     #Create the working drawing for the specific view
-	def self.working_drawing view='top'
+	def self.working_drawing view='top', comps=[]
 		views = ['top', 'left', 'right', 'back', 'front']
 		return nil unless views.include?(view)
 
-		if view=='top'
-			layer_name = 'DP_lamination'
-			Sketchup.active_model.layers.add(layer_name) if Sketchup.active_model.layers[layer_name].nil?
-			delete_layer_entities layer_name
-		end
+		# if view=='top'
+		# 	layer_name = 'DP_lamination'
+		# 	Sketchup.active_model.layers.add(layer_name) if Sketchup.active_model.layers[layer_name].nil?
+		# 	delete_layer_entities layer_name
+		# end
 		
         layer_name = 'DP_outline_'+view
         Sketchup.active_model.layers.add(layer_name) if Sketchup.active_model.layers[layer_name].nil?
@@ -558,8 +580,8 @@ module WorkingDrawing
         Sketchup.active_model.layers.add(layer_name) if Sketchup.active_model.layers[layer_name].nil?
 		delete_layer_entities layer_name
 		
-        comps = outline_drawing view
-        return comps
+        outline_comps = outline_drawing view, comps
+        return outline_comps
 	end
     
 	def self.get_layer_entities layer_name
@@ -671,7 +693,7 @@ module WorkingDrawing
 	end
 
 	def self.get_working_image view, options=[]
-		# puts "get_working : #{view}"
+		puts "get_working : #{view}"
 		include_background_flag = true if options.include?('act_backgrd')
 		#include_background_flag = true
 
@@ -700,88 +722,182 @@ module WorkingDrawing
 		layers = Sketchup.active_model.layers
 		visible_layers = ['DP_outline_'+view, 'DP_dimension_'+view]
 		visible_layers << 'DP_Comp_layer' if include_background_flag
-		visible_layers << 'DP_lamination' if view=='top'
+		#visible_layers << 'DP_lamination' if view=='top'
 		layers.each {|x| visible_layers << x.name if x.name.start_with?('72IMOS')}
-		comps = working_drawing view
-		
-		if include_background_flag
-			visible_comps = DP::get_visible_comps view
+	
+		# if include_background_flag
+		# 	visible_comps = DP::get_visible_comps view
+		# 	layer_comps = Sketchup.active_model.entities.grep(Sketchup::ComponentInstance).select{|x| x.layer.name=='DP_Comp_layer'}
+		# 	layer_comps.each{|x| x.visible=false if !visible_comps.include?(x)}
+		# end
+		if view =='top'
+			rio_comps = DP::get_rio_components
+			DP::get_multi_layer_top_components rio_comps
+			top_comps = DP::get_multi_layer_top_view_components
+			puts "top_comps : #{top_comps}"
+		end
+
+		if view == 'top' && top_comps.length>1
+			puts "Starting section plane"
+			section_count = 0
+			result_arr = []
+			top_comps.each {|comp_list|
+				section_count += 1
+				comp_list.uniq!
+				comps = working_drawing view, comp_list
+				
+				outpath = File.join(RIO_ROOT_PATH, "cache/")
+				end_format = ".jpg"
+				Dir::mkdir(outpath) unless Dir::exist?(outpath)
+				image_file_name = outpath+view+'_section'+section_count.to_s+end_format
+
+				Sketchup.active_model.active_layer=visible_layers[1]
+				layers.each{|layer| layer.visible=false unless visible_layers.include?(layer.name)}
+				# puts visible_layers
+				visible_layers.each{|l| 
+					Sketchup.active_model.layers[l].visible=true if Sketchup.active_model.layers[l]}
+
+				visible_comps.each{|c| c.visible=true}
+				
+				#return
+				if view == "top"
+					@cPos = [0, 0, 0]
+					@cTarg = [0, 0, -1]
+					@cUp = [0, 1, 0]
+				elsif view == "front"
+					@cPos = [0, 0, 0]
+					@cTarg = [0, 1, 0]
+					@cUp = [0, 0, 1]
+				elsif view == "right"
+					@cPos = [0, 0, 0]
+					@cTarg = [1, 0, 0]
+					@cUp = [0, 0, 1]
+				elsif view == "left"
+					@cPos = [0, 0, 0]
+					@cTarg = [-1, 0, 0]
+					@cUp = [0, 0, 1]
+				elsif view == "back"
+					@cPos = [0, 0, 0]
+					@cTarg = [0, 1, 0]
+					@cUp = [0, 0, 1]
+				end
+				
+				Sketchup.active_model.active_view.camera.set @cPos, @cTarg, @cUp
+				Sketchup.active_model.active_view.zoom_extents
+				keys = {
+					:filename => image_file_name,
+					:width => 1920,
+					:height => 1080,
+					:antialias => true,
+					:compression => 0,
+					:transparent => true
+				}
+				
+				Sketchup.active_model.active_view.camera.perspective = false
+				
+				#Sketchup.active_model.active_view.write_image keys
+				Sketchup.active_model.active_view.write_image image_file_name
+				#Sketchup.active_model.active_view.write_image outpath+"j"+view+".jpg"
+				layer_comps = Sketchup.active_model.entities.grep(Sketchup::ComponentInstance).select{|x| x.layer.name=='DP_Comp_layer'}
+				layer_comps.each{|x| x.visible=true}
+
+				layers.each{|layer| layer.visible=true}
+
+				dim_out_layers = Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_dimension')}
+				dim_out_layers << Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_outline')}
+				dim_out_layers.flatten!
+
+				ents = Sketchup.active_model.entities
+				ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_dimension')}
+				ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_outline')}
+
+				['DP_outline_'+view, 'DP_dimension_'+view].each{|layer_name| 
+					#layer = Sketchup.active_model.layers[layer_name]
+					delete_layer_entities layer_name
+				}
+
+				#Sketchup.active_model.active_view.zoom_extents
+				result_arr << [comp_list, image_file_name]
+			}
+			puts "result_arr : #{result_arr}"
+			puts "----------------------------------------"
+			DP::set_multi_layer_top_view_components []
+			return result_arr
+		else
+			comps = working_drawing view
+			
+			outpath = File.join(RIO_ROOT_PATH, "cache/")
+			end_format = ".jpg"
+			Dir::mkdir(outpath) unless Dir::exist?(outpath)
+			image_file_name = outpath+view+end_format
+
+			Sketchup.active_model.active_layer=visible_layers[1]
+			layers.each{|layer| layer.visible=false unless visible_layers.include?(layer.name)}
+			# puts visible_layers
+			visible_layers.each{|l| 
+				Sketchup.active_model.layers[l].visible=true if Sketchup.active_model.layers[l]}
+
+			visible_comps.each{|c| c.visible=true}
+			
+			#return
+			if view == "top"
+				@cPos = [0, 0, 0]
+				@cTarg = [0, 0, -1]
+				@cUp = [0, 1, 0]
+			elsif view == "front"
+				@cPos = [0, 0, 0]
+				@cTarg = [0, 1, 0]
+				@cUp = [0, 0, 1]
+			elsif view == "right"
+				@cPos = [0, 0, 0]
+				@cTarg = [1, 0, 0]
+				@cUp = [0, 0, 1]
+			elsif view == "left"
+				@cPos = [0, 0, 0]
+				@cTarg = [-1, 0, 0]
+				@cUp = [0, 0, 1]
+			elsif view == "back"
+				@cPos = [0, 0, 0]
+				@cTarg = [0, 1, 0]
+				@cUp = [0, 0, 1]
+			end
+			
+			Sketchup.active_model.active_view.camera.set @cPos, @cTarg, @cUp
+			Sketchup.active_model.active_view.zoom_extents
+			keys = {
+				:filename => image_file_name,
+				:width => 1920,
+				:height => 1080,
+				:antialias => true,
+				:compression => 0,
+				:transparent => true
+			}
+			Sketchup.active_model.active_view.camera.perspective = false
+			
+			#Sketchup.active_model.active_view.write_image keys
+			Sketchup.active_model.active_view.write_image image_file_name
+			#Sketchup.active_model.active_view.write_image outpath+"j"+view+".jpg"
 			layer_comps = Sketchup.active_model.entities.grep(Sketchup::ComponentInstance).select{|x| x.layer.name=='DP_Comp_layer'}
-			layer_comps.each{|x| x.visible=false if !visible_comps.include?(x)}
+			layer_comps.each{|x| x.visible=true}
+
+			layers.each{|layer| layer.visible=true}
+
+			dim_out_layers = Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_dimension')}
+			dim_out_layers << Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_outline')}
+			dim_out_layers.flatten!
+
+			ents = Sketchup.active_model.entities
+			ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_dimension')}
+			ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_outline')}
+
+			['DP_outline_'+view, 'DP_dimension_'+view].each{|layer_name| 
+				#layer = Sketchup.active_model.layers[layer_name]
+				delete_layer_entities layer_name
+			}
+
+			Sketchup.active_model.active_view.zoom_extents
+			return [comps, image_file_name]
 		end
-		
-		outpath = File.join(RIO_ROOT_PATH, "cache/")
-		end_format = ".jpg"
-		Dir::mkdir(outpath) unless Dir::exist?(outpath)
-		image_file_name = outpath+view+end_format
-
-		Sketchup.active_model.active_layer=visible_layers[1]
-		layers.each{|layer| layer.visible=false unless visible_layers.include?(layer.name)}
-		# puts visible_layers
-		visible_layers.each{|l| 
-			Sketchup.active_model.layers[l].visible=true if Sketchup.active_model.layers[l]}
-
-		#puts "visible_layers : #{visible_layers}"
-		visible_comps.each{|c| c.visible=true}
-		
-		#return
-		if view == "top"
-			@cPos = [0, 0, 0]
-			@cTarg = [0, 0, -1]
-			@cUp = [0, 1, 0]
-		elsif view == "front"
-			@cPos = [0, 0, 0]
-			@cTarg = [0, 1, 0]
-			@cUp = [0, 0, 1]
-		elsif view == "right"
-			@cPos = [0, 0, 0]
-			@cTarg = [1, 0, 0]
-			@cUp = [0, 0, 1]
-		elsif view == "left"
-			@cPos = [0, 0, 0]
-			@cTarg = [-1, 0, 0]
-			@cUp = [0, 0, 1]
-		elsif view == "back"
-			@cPos = [0, 0, 0]
-			@cTarg = [0, 1, 0]
-			@cUp = [0, 0, 1]
-		end
-		
-		Sketchup.active_model.active_view.camera.set @cPos, @cTarg, @cUp
-		Sketchup.active_model.active_view.zoom_extents
-		keys = {
-			:filename => image_file_name,
-			:width => 1920,
-			:height => 1080,
-			:antialias => true,
-			:compression => 0,
-			:transparent => true
-		}
-		Sketchup.active_model.active_view.camera.perspective = false
-		
-		#Sketchup.active_model.active_view.write_image keys
-		Sketchup.active_model.active_view.write_image image_file_name
-		#Sketchup.active_model.active_view.write_image outpath+"j"+view+".jpg"
-		layer_comps = Sketchup.active_model.entities.grep(Sketchup::ComponentInstance).select{|x| x.layer.name=='DP_Comp_layer'}
-		layer_comps.each{|x| x.visible=true}
-
-		layers.each{|layer| layer.visible=true}
-
-		dim_out_layers = Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_dimension')}
-		dim_out_layers << Sketchup.active_model.layers.select{|x| x.name.start_with?('DP_outline')}
-		dim_out_layers.flatten!
-
-		ents = Sketchup.active_model.entities
-		ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_dimension')}
-		ents.each{|ent| ents.erase_entities ent if ent.layer.name.start_with?('DP_outline')}
-
-		['DP_outline_'+view, 'DP_dimension_'+view].each{|layer_name| 
-			#layer = Sketchup.active_model.layers[layer_name]
-			delete_layer_entities layer_name
-		}
-
-		Sketchup.active_model.active_view.zoom_extents
-		return [comps, image_file_name]
 	end
 	
 	def self.export_working_drawing

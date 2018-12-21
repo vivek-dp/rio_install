@@ -70,29 +70,41 @@ module Decor_Standards
 		call_image = WorkingDrawing::get_working_image(vi)
 		newh = call_image
 		return {} if newh.empty?
-		mainarr = []
 		mainh = {}
-		newh[0].keys.each{|x| 
-			shash = {}
-			# puts "newh[0][x].attribute_dictionaries : #{newh[0][x].attribute_dictionaries}"
-			if !newh[0][x].attribute_dictionaries.nil?
-				if !newh[0][x].attribute_dictionaries[dict_name].nil?
-					newh[0][x].attribute_dictionaries[dict_name].each{|key, val|
-						shash[key] = val
-					}
+		if vi == 'top'
+			mainh['image'] = []
+			if call_image[1].is_a?(Array)
+				call_image.each{|arr|
+					mainh['image'] << arr[1]
+				}
+			else
+				mainh['image'] = [call_image[1]]
+			end
+		else
+			mainarr = []
+			
+			newh[0].keys.each{|x| 
+				shash = {}
+				# puts "newh[0][x].attribute_dictionaries : #{newh[0][x].attribute_dictionaries}"
+				if !newh[0][x].attribute_dictionaries.nil?
+					if !newh[0][x].attribute_dictionaries[dict_name].nil?
+						newh[0][x].attribute_dictionaries[dict_name].each{|key, val|
+							shash[key] = val
+						}
+						shash["id"] = x
+						mainarr.push(shash)
+					end
+				else
+					shash["attr_product_name"] = newh[0][x].definition.get_attribute(dict_name, 'attr_product_name')
+					shash["attr_product_code"] = newh[0][x].definition.get_attribute(dict_name, 'attr_product_code')
 					shash["id"] = x
 					mainarr.push(shash)
 				end
-			else
-				shash["attr_product_name"] = newh[0][x].definition.get_attribute(dict_name, 'attr_product_name')
-				shash["attr_product_code"] = newh[0][x].definition.get_attribute(dict_name, 'attr_product_code')
-				shash["id"] = x
-				mainarr.push(shash)
-			end
-		}
-		mainh["attributes"] = mainarr
-		mainh["image"] = newh[1]
-
+				mainh["attributes"] = mainarr
+				mainh["image"] = newh[1]
+			}
+		end
+		# puts "mainh---#{mainh}"
 		return mainh
 	end
 
@@ -108,7 +120,6 @@ module Decor_Standards
 		elevation_image = File.join(WEBDIALOG_PATH,"../images/elevation.png")
 		clientid = clientid.empty? ? 'N/A' : clientid
 		@views = input
-		@topviews = ["top", "top_section1", "top_section2", "top_section3"]
 
 		html = '<!DOCTYPE html>
 							<html lang="en">
@@ -136,13 +147,12 @@ module Decor_Standards
 
 							<body>
 								<div class="container-fluid">'
-									@topviews.each{|tv|
-										if tv == "top"
-											pname = "floor plan"
-										else
-											pname = tv.gsub("_", " ")
-										end
-										@topimg = self.get_homeimg(tv)
+									@topimg = self.get_attributes('top')
+									# puts "@topimg----#{@topimg['image']}", @topimg['image'].length
+									@topimg['image'].each {|img|
+										getn = img.split("/").last
+										getname = getn.split(".j")
+										pname = getname[0].gsub("_", " ")
 		html +=	'<section style="border-style: double;">
 										<div style="padding: 5px;">
 											<table class="table table-bordered">
@@ -168,18 +178,18 @@ module Decor_Standards
 																<div>Component ID:<br><span style="color:#7A003D !important; vertical-align:super;">______</span></div>
 															</div>
 														</td>
-														<td width="80%" style="padding: 1px;"><div style="text-align:center;"><h3>'+pname.capitalize+'</h3></div><div class="pull-right"><img src="'+@topimg+'" width="820" height="620"><img class="imgB1" src="'+elevation_image+'" width="120" height="120"></div></td>
+														<td width="80%" style="padding: 1px;"><div style="text-align:center;"><h3>'+pname.capitalize+'</h3></div><div class="pull-right"><img src="'+img+'" width="820" height="620"><img class="imgB1" src="'+elevation_image+'" width="120" height="120"></div></td>
 													</tr>
 												</tbody>
 											</table>
 										</div>
 									</section>'
-									}						
+									}
 		html +='</div>
 								<div class="page-break"></div>
 								<div class="container-fluid">'
 									@views.each{|vi|
-										elevate = {"left"=>"A", "back"=>"B", "right"=>"C", "front"=>"D", "top"=>"top"}
+										elevate = {"left"=>"A", "back"=>"B", "right"=>"C", "front"=>"D"}
 										@skps = self.get_attributes(vi)
 										next if @skps.empty?
 										# puts "@skp : #{@skps}"

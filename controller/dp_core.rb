@@ -8,6 +8,16 @@ require_relative 'tt_core.rb'
 require 'csv'
 
 module DP
+	@@multi_layer_top_view_components=[]
+
+	def self.set_multi_layer_top_view_components input
+		@@multi_layer_top_view_components = input 
+	end
+
+	def self.get_multi_layer_top_view_components
+		@@multi_layer_top_view_components
+	end
+
 	def self.mod
 		Sketchup.active_model
 	end
@@ -193,6 +203,96 @@ module DP
 			comp.transform!(transformation)
 		else
 			UI.messagebox 'Component not selected!', MB_OK
+		end
+	end
+
+	def self.get_hit_points comp
+		bounds 		= comp.bounds
+		corner_pts 	= []
+		all_points 	= []
+		[4,5,7,6].each{ |index|
+				corner_pts 	<< comp.bounds.corner(index)
+		}
+		all_points << corner_pts
+		corner_pts.length.times {|i|
+			pt1 = corner_pts[0]
+			pt2 = corner_pts[1]
+			corner_pts.rotate!
+			vector = pt1.vector_to pt2
+			offset = (pt1.distance pt2)/5
+			4.times{ |index|
+				all_points << pt1.offset(vector, index*offset)
+			}
+		}
+		
+		pt1 = comp.bounds.corner(4)
+		pt2 = comp.bounds.corner(7)
+		vector = pt1.vector_to pt2
+		offset = (pt1.distance pt2)/5
+		4.times{ |index|
+			all_points << pt1.offset(vector, index*offset)
+		}
+		
+		pt1 = comp.bounds.corner(5)
+		pt2 = comp.bounds.corner(6)
+		vector = pt1.vector_to pt2
+		offset = (pt1.distance pt2)/5
+		4.times{ |index|
+			all_points << pt1.offset(vector, index*offset)
+		}
+		
+		all_points
+	end
+
+	def self.get_multi_layer_top_components comps
+		if comps.empty?
+			Sketchup.active_model.abort_operation
+			return [] 
+		end
+		if @@multi_layer_top_view_components.empty?
+			Sketchup.active_model.start_operation 'Multi layer Top Component'
+		end
+		#rio_comps	= get_rio_components
+		rio_comps 	= comps 
+	
+		layers_arr 	= Sketchup.active_model.layers
+	
+		layers_arr.each{|mod_layer| mod_layer.visible=false}
+	
+		layers_arr['DP_Comp_layer'].visible=true
+		layers_arr.each {|x| x.visible=true if x.name.start_with?('72IMOS')}
+	
+		model 	= Sketchup.active_model
+		zvector = Geom::Vector3d.new(0, 0, 1)
+	
+		visible_comps = []
+		rio_comps.each {|comp|
+			comp_visible = true
+			hit_points 	= get_hit_points comp
+			hit_points.flatten!
+
+			hit_points.each{ |corner_pt|
+				hit_item	= model.raytest corner_pt, zvector
+				if hit_item
+					hit_comp 	= hit_item[1][0]
+					comp_visible = false if rio_comps.include?(hit_comp)
+				end
+			}
+			if comp_visible
+				visible_comps << comp
+				#comp.visible=false
+			end
+		}
+		if visible_comps.empty?
+			Sketchup.active_model.abort_operation
+			return [] 
+		else
+			#puts "visible_comps : #{visible_comps}"
+			#sel.add(visible_comps)
+			@@multi_layer_top_view_components << visible_comps
+			rem_comps = comps - visible_comps
+			visible_comps.each{|x| x.visible=false}
+			get_multi_layer_top_components rem_comps
 		end
 	end
 	
